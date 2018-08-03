@@ -42,7 +42,7 @@ class AddButton extends Component {
     return (
       <View>
         <Icon.Button name='plus' onPress={() => this.showActionSheet() }>
-          <Text>Yo</Text>
+          <Text>Add Picture of Item</Text>
         </Icon.Button>
         
           <ActionSheet

@@ -41,7 +41,7 @@ const RootStack = createStackNavigator({
 
 },
 {
-  initialRouteName: 'login',
+  initialRouteName: 'profile',
   // the shared navigationOptions, which we can always override within the component
   navigationOptions: {
     title: 'NottMyStyle',

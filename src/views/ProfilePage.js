@@ -2,10 +2,14 @@ import React, { Component } from 'react'
 import { Text, StyleSheet, View, Image, ImageBackground } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AddButton from '../components/AddButton.js';
+import {Button} from 'react-native-elements'
+import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
+
+
 
 const resizeMode = 'center';
 
-export default class ProfilePage extends Component {
+class ProfilePage extends Component {
   constructor(props) {
     super(props);
 
@@ -29,14 +33,26 @@ export default class ProfilePage extends Component {
           </View>
         </ImageBackground> 
 
-        <View >
+        {/* <View >
           <AddButton />
-        </View>
+        </View> */}
+
+        
+        <Button
+            large
+            icon={{name: 'plus', type: 'font-awesome'}}
+            title='SELL AN ITEM'
+            onPress={() => this.props.navigation.navigate('CreateItem')} 
+
+        />
+        
 
       </View>
     )
   }
 }
+
+export default withNavigation(ProfilePage)
 
 const styles = StyleSheet.create({
   container: {
@@ -60,7 +76,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '30%',
     justifyContent: 'center',
-  }
+  },
+
+  
 
 })
 

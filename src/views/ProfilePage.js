@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import AddButton from '../components/AddButton.js';
 import {Button} from 'react-native-elements'
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
+import CreateItem from './CreateItem.js';
 
 
 
@@ -12,43 +13,52 @@ const resizeMode = 'center';
 class ProfilePage extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      sellItem: false,
+    }
 
   }
   
   render() {
-    return (
-      <View style={styles.container}>
-       
-        <ImageBackground
-            style={styles.pattern}
-            source={require('../images/profile_bg.jpg')}
-          >
-         
-         
-          <Image style= {styles.avatar} source={require('../images/blank.jpg')} />
-          <Text> {this.props.name} </Text>
-          <View style={styles.locationbar}>
-            <Icon name='rocket' />
-            <Text>Hails from: {this.props.location}</Text>
-          </View>
-        </ImageBackground> 
-
-        {/* <View >
-          <AddButton />
-        </View> */}
-
+    if(this.state.sellItem) {
+      console.log(this.props.uid);
+      return ( <CreateItem uid={this.props.uid} /> )
+    }
+    else {
+      return (
+        <View style={styles.container}>
         
-        <Button
-            large
-            icon={{name: 'plus', type: 'font-awesome'}}
-            title='SELL AN ITEM'
-            onPress={() => this.props.navigation.navigate('CreateItem')} 
+          <ImageBackground
+              style={styles.pattern}
+              source={require('../images/profile_bg.jpg')}
+            >
+          
+          
+            <Image style= {styles.avatar} source={require('../images/blank.jpg')} />
+            <Text> {this.props.name} </Text>
+            <View style={styles.locationbar}>
+              <Icon name='rocket' />
+              <Text>Hails from: {this.props.location}</Text>
+            </View>
+          </ImageBackground> 
 
-        />
-        
+          {/* <View >
+            <AddButton />
+          </View> */}
 
-      </View>
-    )
+          
+          <Button
+              large
+              icon={{name: 'plus', type: 'font-awesome'}}
+              title='SELL AN ITEM'
+              onPress={() => this.setState({sellItem: true})} 
+
+          />
+          
+
+        </View>
+      )
+  }
   }
 }
 

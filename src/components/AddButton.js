@@ -28,7 +28,7 @@ class AddButton extends Component {
 
   launchCamera() {
     console.log('launching camera');
-    this.props.navigation.navigate('camera')
+    this.props.navigation.navigate('Camera')
     //<MyCustomCamera />
     
   }

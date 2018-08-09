@@ -4415,7 +4415,7 @@ prompts@^0.1.9:
     clorox "^1.0.3"
     sisteransi "^0.1.1"
 
-prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1:
+prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
   dependencies:
@@ -4558,6 +4558,12 @@ react-native-indicators@^0.13.0:
   resolved "https://registry.yarnpkg.com/react-native-indicators/-/react-native-indicators-0.13.0.tgz#001824bba194b1ca6e654d903beaf0168d4e6ac8"
   dependencies:
     prop-types "^15.5.10"
+
+react-native-material-textfield@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.12.0.tgz#3fba19d76ab89f67052c81e082152fc243d82a3f"
+  dependencies:
+    prop-types "^15.5.9"
 
 react-native-safe-area-view@^0.7.0:
   version "0.7.0"

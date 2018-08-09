@@ -7,10 +7,8 @@ import {
 } from 'react-native';
 import { createStackNavigator } from 'react-navigation'; // Version can be specified in package.json
 
-var firebase = require("firebase");
-
-import InputPage from './src/views/InputPage.js'
-import Registration from './src/views/Registration.js'
+import GalleryEntry from './src/views/GalleryEntry.js'
+import SignIn from './src/views/SignIn.js'
 import ProfilePage from './src/views/ProfilePage.js';
 import MyCustomCamera from './src/components/Camera';
 import AddButton from './src/components/AddButton';
@@ -27,24 +25,24 @@ type Props = {};
 
 const RootStack = createStackNavigator({
 
-  login: Registration,
+  SignIn: SignIn,
 
-  inputs: InputPage,
+  Gallery: GalleryEntry,
 
-  profile: ProfilePage,
+  Profile: ProfilePage,
 
   AddButton: AddButton,
 
-  camera: MyCustomCamera,
+  Camera: MyCustomCamera,
 
   CreateItem: CreateItem,
 
 },
 {
-  initialRouteName: 'profile',
+  initialRouteName: 'SignIn',
   // the shared navigationOptions, which we can always override within the component
   navigationOptions: {
-    title: 'NottMyStyle',
+    title: 'SellMyStyle',
     headerStyle: {
       backgroundColor: '#800000',
     },
@@ -60,23 +58,6 @@ const RootStack = createStackNavigator({
 )
 
 export default class App extends Component<Props> {
-
-
-  componentWillMount() {
-    const config = {
-      apiKey: "AIzaSyBUkOB1x1F-bsZcGDnxXQI76JbU-4n8vqI",
-      authDomain: "nottmystyle-447aa.firebaseapp.com",
-      databaseURL: "https://nottmystyle-447aa.firebaseio.com",
-      projectId: "nottmystyle-447aa",
-      storageBucket: "",
-      messagingSenderId: "791527199565"
-    };
-    firebase.initializeApp(config);
-  }
-
-  
-
-  
 
   render() {
     console.disableYellowBox = true;

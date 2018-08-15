@@ -9,7 +9,7 @@ import {
 
 import ViewPhotos from './ViewPhotos.js';
 
-class InputPage extends Component {
+class GalleryEntry extends Component {
 
   constructor(props){
     super(props);
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default InputPage;
+export default GalleryEntry;
 
 // import React, { Component } from 'react';
 // import {

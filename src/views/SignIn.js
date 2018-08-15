@@ -6,7 +6,6 @@ import { PulseIndicator } from 'react-native-indicators';
 import {Button} from 'react-native-elements'
 //import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick'
 import styles from '../styles.js';
-import InputPage from './InputPage.js'
 //import GeoAttendance from './geoattendance.js';
 import ProfilePage from './ProfilePage';
 var firebase = require("firebase");
@@ -15,7 +14,7 @@ var firebase = require("firebase");
 
 
 //currently no barrier to logging in and signing up
-class Registration extends Component {
+class SignIn extends Component {
 
     constructor(props) {
       super(props);
@@ -173,8 +172,8 @@ class Registration extends Component {
     
     if(this.state.isGetting == false) 
          {
-          console.log(this.state.data); 
-          return (<ProfilePage name={this.state.details.name}/>) 
+          console.log(this.state.uid); 
+          return (<ProfilePage uid={this.state.uid} name={this.state.details.name}/>) 
          }
     else {return (
             
@@ -182,7 +181,7 @@ class Registration extends Component {
           style={styles.signInContainer}>
                   
                 <Hoshi
-                    label={'NMS Email Address'}
+                    label={'SellMyStyle Email Address'}
                     value={this.state.email}
                     onChangeText={email => this.setState({ email })}
                     autoCorrect={false}
@@ -206,6 +205,20 @@ class Registration extends Component {
                     inputStyle={{ color: '#800000' }}
                 />
                   {this.renderButtonOrLoading()}
+                <Button
+                    title='SellMyStyle Market' 
+                    titleStyle={{ fontWeight: "700" }}
+                    buttonStyle={{
+                    backgroundColor: "#0a3f93",
+                    width: 300,
+                    height: 45,
+                    borderColor: "transparent",
+                    borderWidth: 0,
+                    borderRadius: 5
+                    }}
+                    containerStyle={{ marginTop: 20, marginBottom: 20 }} 
+                    onPress={ () => this.props.navigation.navigate('MarketPlace') } />  
+
                  
                 
           
@@ -281,4 +294,4 @@ class Registration extends Component {
     //     }
     // }
 }
-export default withNavigation(Registration);
+export default withNavigation(SignIn);

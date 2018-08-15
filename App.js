@@ -13,6 +13,9 @@ import ProfilePage from './src/views/ProfilePage.js';
 import MyCustomCamera from './src/components/Camera';
 import AddButton from './src/components/AddButton';
 import CreateItem from './src/views/CreateItem.js'
+import EditProfile from './src/views/EditProfile.js';
+import MarketPlace from './src/views/MarketPlace.js';
+
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -36,6 +39,11 @@ const RootStack = createStackNavigator({
   Camera: MyCustomCamera,
 
   CreateItem: CreateItem,
+
+  MarketPlace: MarketPlace,
+
+  EditProfile: EditProfile,
+
 
 },
 {

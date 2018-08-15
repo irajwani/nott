@@ -24,41 +24,46 @@ class ProfilePage extends Component {
       console.log(this.props.uid);
       return ( <CreateItem uid={this.props.uid} /> )
     }
-    else {
-      return (
-        <View style={styles.container}>
+
+    
+    
+    return (
+      <View style={styles.container}>
+      
+        <ImageBackground
+            style={styles.pattern}
+            source={require('../images/profile_bg.jpg')}
+          >
         
-          <ImageBackground
-              style={styles.pattern}
-              source={require('../images/profile_bg.jpg')}
-            >
-          
-          
-            <Image style= {styles.avatar} source={require('../images/blank.jpg')} />
-            <Text> {this.props.name} </Text>
-            <View style={styles.locationbar}>
-              <Icon name='rocket' />
-              <Text>Hails from: {this.props.location}</Text>
-            </View>
-          </ImageBackground> 
+        
+          <Image style= {styles.avatar} source={require('../images/blank.jpg')} />
+          <Text> {this.props.name} </Text>
+          <View style={styles.locationbar}>
+            <Icon name='rocket' />
+            <Text>Hails from: {this.props.location}</Text>
+          </View>
+        </ImageBackground> 
+        
+        <Button
+            large
+            icon={{name: 'user', type: 'font-awesome'}}
+            title='EDIT PROFILE'
+            onPress={() => {this.props.navigation.navigate('EditProfile')}} 
 
-          {/* <View >
-            <AddButton />
-          </View> */}
+        />
+        
+        <Button
+            large
+            icon={{name: 'plus', type: 'font-awesome'}}
+            title='SELL AN ITEM'
+            onPress={() => this.setState({sellItem: true})} 
 
-          
-          <Button
-              large
-              icon={{name: 'plus', type: 'font-awesome'}}
-              title='SELL AN ITEM'
-              onPress={() => this.setState({sellItem: true})} 
+        />
+        
 
-          />
-          
-
-        </View>
-      )
-  }
+      </View>
+    )
+  
   }
 }
 

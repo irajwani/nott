@@ -59,6 +59,20 @@ class ProfilePage extends Component {
             onPress={() => this.setState({sellItem: true})} 
 
         />
+
+        <Button
+                    title='SellMyStyle Market' 
+                    titleStyle={{ fontWeight: "700" }}
+                    buttonStyle={{
+                    backgroundColor: "#0a3f93",
+                    width: 300,
+                    height: 45,
+                    borderColor: "transparent",
+                    borderWidth: 0,
+                    borderRadius: 5
+                    }}
+                    containerStyle={{ marginTop: 20, marginBottom: 20 }} 
+                    onPress={ () => this.props.navigation.navigate('MarketPlace') } />  
         
 
       </View>

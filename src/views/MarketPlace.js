@@ -1,71 +1,52 @@
 import React, { Component } from 'react'
-import { Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import firebase from '../cloud/firebase.js';
+import {database} from '../cloud/database';
+import {storage} from '../cloud/storage';
 
 
 class MarketPlace extends Component {
   constructor(props) {
       super(props);
       this.state = {
+        products: [],
         refreshing: false,
       };
   }
 
-  generateProducts(uids, keys) {
-    const products = [];
-    for(uid of uids) {
-      for(key of keys) {
-        
-        
-        firebase.database().ref('Users/' + uid  + '/products/' + key + '/').once('value')
-        .then( (snapshot) => {products.push(snapshot.val());} )
-
-      }
-    }
-    return products;
-  }
+  // generateProducts(data, uids, keys) {
+    
+  //   return products;
+  // }
 
 
   getProducts() {
     this.setState({ refreshing: true });
-    const uids = [];
     const keys = [];
-    
-
-    firebase.database().ref('Users/').once('value')
-    .then(
-      function(snapshot) {
-        uids.push(Object.keys(snapshot.val()));
-        return uids
+    database.then( (d) => {
+      var uids = Object.keys(d.Users);
+      var keys = [];
+      for(uid of uids) {
+        Object.keys(d.Users[uid].products).forEach( (key) => keys.push(key));
       }
-    )
-    .then( 
-      (uids) => {
-        for(uid of uids) {
-          //get all the keys
-          firebase.database().ref('Users/' + uid + '/' + 'products/').once('value')
-          .then(
-            function(snapshot) {
-              keys.push(Object.keys(snapshot.val()))
-            }
-          )
+      var products = [];
+      
+      for(const uid of uids) {
+        for(const key of keys) {
+          storage.child(`${uid}/${key}`).getDownloadURL().then( (uri) => {
+            products.push( {uri: uri, text: d.Users[uid].products[key] } )
+          } )
+          
+        }
+      }
 
-      };
-    }
-      
-    )
-    .then( () => {
-      
-      
+      return products;
+    })
 
-
-    } )
-    .then(() => {
-      this.setState({ refreshing: false })
-      
-      
-      
+    
+    .then((products) => {
+      this.setState({ products, refreshing: false }) 
     });
     
     
@@ -76,7 +57,7 @@ class MarketPlace extends Component {
   }
 
   render() {
-    
+    console.log(this.state.products);
     return (
       <ScrollView
              contentContainerStyle={{
@@ -90,8 +71,21 @@ class MarketPlace extends Component {
 
                   />}
       >
-        <Text>YO YO</Text>
-        <Text>sflffkff ksff </Text>
+
+      {this.state.products.map( (product, index) => 
+        ( 
+          <Image
+          key = {index} 
+          style={{width: 66, height: 58}}
+          source={ {uri: product.uri} }/>
+          
+        )
+       )}
+        {/* <Text>YO YO</Text>
+        <Image 
+          style={{width: 66, height: 58}}
+          source={ {uri: 'https://firebasestorage.googleapis.com/v0/b/nottmystyle-447aa.appspot.com/o/Users%2FmrBrWPt5Dvh3JID4nX55Ngmtlrw2%2F-LJUF-khoXAe7UTfBJVE?alt=media&token=607071b0-955e-4a40-97e7-c6855eee0ca9'} }/>
+        <Text>sflffkff ksff </Text> */}
 
       </ScrollView>          
     )

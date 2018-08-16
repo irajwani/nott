@@ -34,7 +34,8 @@ class MarketPlace extends Component {
       
       for(const uid of uids) {
         for(const key of keys) {
-          storage.child(`${uid}/${key}`).getDownloadURL().then( (uri) => {
+          storage.child(`${uid}/${key}`).getDownloadURL()
+          .then( (uri) => {
             products.push( {uri: uri, text: d.Users[uid].products[key] } )
           } )
           
@@ -74,10 +75,10 @@ class MarketPlace extends Component {
 
       {this.state.products.map( (product, index) => 
         ( 
-          <Image
-          key = {index} 
-          style={{width: 66, height: 58}}
-          source={ {uri: product.uri} }/>
+            <Image
+            key = {index} 
+            style={{width: 159, height: 150}}
+            source={ {uri: product.uri} }/>
           
         )
        )}

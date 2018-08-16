@@ -72,7 +72,7 @@ class ProfilePage extends Component {
                     borderRadius: 5
                     }}
                     containerStyle={{ marginTop: 20, marginBottom: 20 }} 
-                    onPress={ () => this.props.navigation.navigate('MarketPlace') } />  
+                    onPress={ () => this.props.navigation.navigate('MarketPlace', ) } />  
         
 
       </View>

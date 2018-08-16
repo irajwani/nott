@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, Image, StyleSheet, ScrollView, RefreshControl } from 'react-native';
+import { View, Image, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import firebase from '../cloud/firebase.js';
 import {database} from '../cloud/database';
 import {storage} from '../cloud/storage';
-
+import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 
 class MarketPlace extends Component {
   constructor(props) {
@@ -20,9 +20,20 @@ class MarketPlace extends Component {
   //   return products;
   // }
 
+  componentWillMount() {
+    this.getProducts();
+  }
+
+  // componentDidMount() {
+  //   this.timerID = setInterval(
+	// 		() => this.getProducts(),
+	// 		10000
+  //     ); 
+
+  // }
 
   getProducts() {
-    this.setState({ refreshing: true });
+    
     const keys = [];
     database.then( (d) => {
       var uids = Object.keys(d.Users);
@@ -42,13 +53,14 @@ class MarketPlace extends Component {
         }
       }
 
-      return products;
+      this.setState({ products })
     })
+    .catch( (err) => {console.log(err) })
 
     
-    .then((products) => {
-      this.setState({ products, refreshing: false }) 
-    });
+    // .then((products) => {
+    //   this.setState({ products }) 
+    // });
     
     
 
@@ -65,28 +77,45 @@ class MarketPlace extends Component {
                     flexGrow: 1,
                     justifyContent: 'space-between'
                 }}
-              refreshControl = {
-                <RefreshControl 
-                  refreshing={this.state.refreshing} 
-                  onRefresh={() => {this.getProducts();}}
-
-                  />}
+              
       >
 
-      {this.state.products.map( (product, index) => 
+      {this.state.products.map( (product) => 
         ( 
-            <Image
-            key = {index} 
-            style={{width: 159, height: 150}}
-            source={ {uri: product.uri} }/>
+          <Card style={{flex: 0}}>
+            <CardItem>
+              <Left>
+                
+                <Body>
+                  <Text>NativeBase</Text>
+                  <Text note>April 15, 2016</Text>
+                </Body>
+              </Left>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Image source={{uri: product.uri}} style={{height: 150, width: 150}}/>
+                <Text>
+                  //Your text here
+                </Text>
+              </Body>
+            </CardItem>
+            <CardItem>
+              <Left>
+                <Button transparent textStyle={{color: '#87838B'}}>
+                  <Icon name="logo-github" />
+                  <Text>1,926 stars</Text>
+                </Button>
+              </Left>
+            </CardItem>
+          </Card>
+            
+            
+          
           
         )
        )}
-        {/* <Text>YO YO</Text>
-        <Image 
-          style={{width: 66, height: 58}}
-          source={ {uri: 'https://firebasestorage.googleapis.com/v0/b/nottmystyle-447aa.appspot.com/o/Users%2FmrBrWPt5Dvh3JID4nX55Ngmtlrw2%2F-LJUF-khoXAe7UTfBJVE?alt=media&token=607071b0-955e-4a40-97e7-c6855eee0ca9'} }/>
-        <Text>sflffkff ksff </Text> */}
+        
 
       </ScrollView>          
     )
@@ -96,3 +125,16 @@ class MarketPlace extends Component {
 export default withNavigation(MarketPlace);
 
 const styles = StyleSheet.create({})
+
+
+{/* <Image
+            
+            style={{width: 150, height: 150}}
+            source={ {uri: product.uri} }/> */}
+
+            // refreshControl = {
+            //   <RefreshControl 
+            //     refreshing={this.state.refreshing} 
+            //     onRefresh={() => {this.getProducts();}}
+
+            //     />}

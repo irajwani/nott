@@ -5,6 +5,9 @@ import AddButton from '../components/AddButton.js';
 import {Button} from 'react-native-elements'
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import CreateItem from './CreateItem.js';
+import firebase from '../cloud/firebase.js';
+import {database} from '../cloud/database';
+import {storage} from '../cloud/storage';
 
 
 
@@ -15,11 +18,46 @@ class ProfilePage extends Component {
     super(props);
     this.state = {
       sellItem: false,
+      products: [],
     }
 
   }
+
+  componentWillMount() {
+    this.getProducts();
+  }
+
+  getProducts() {
+    
+    const keys = [];
+    database.then( (d) => {
+      var uids = Object.keys(d.Users);
+      var keys = [];
+      for(uid of uids) {
+        Object.keys(d.Users[uid].products).forEach( (key) => keys.push(key));
+      }
+      var products = [];
+      
+      for(const uid of uids) {
+        for(const key of keys) {
+          storage.child(`${uid}/${key}`).getDownloadURL()
+          .then( (uri) => {
+            products.push( {uid: uid, uri: uri, text: d.Users[uid].products[key] } )
+          } )
+          
+        }
+      }
+
+      
+
+      this.setState({ products })
+    })
+    .catch( (err) => {console.log(err) })
+    
+  }
   
   render() {
+    console.log(this.state.products);
     if(this.state.sellItem) {
       console.log(this.props.uid);
       return ( <CreateItem uid={this.props.uid} /> )
@@ -72,7 +110,7 @@ class ProfilePage extends Component {
                     borderRadius: 5
                     }}
                     containerStyle={{ marginTop: 20, marginBottom: 20 }} 
-                    onPress={ () => this.props.navigation.navigate('MarketPlace', ) } />  
+                    onPress={ () => this.props.navigation.navigate('MarketPlace', this.state.products) } />  
         
 
       </View>

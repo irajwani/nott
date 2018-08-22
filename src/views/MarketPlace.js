@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { View, Image, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
-import firebase from '../cloud/firebase.js';
-import {database} from '../cloud/database';
-import {storage} from '../cloud/storage';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
+import firebase from '../cloud/firebase';
 
 class MarketPlace extends Component {
   constructor(props) {
@@ -15,62 +13,21 @@ class MarketPlace extends Component {
       };
   }
 
-  // generateProducts(data, uids, keys) {
-    
-  //   return products;
-  // }
-
-  componentWillMount() {
-    this.getProducts();
+  componentDidMount() {
+    var updates = {};
+    var {params} = this.props.navigation.state;
+    updates['/Products/'] = params;
+    firebase.database().ref().update(updates);
   }
 
-  // componentDidMount() {
-  //   this.timerID = setInterval(
-	// 		() => this.getProducts(),
-	// 		10000
-  //     ); 
-
-  // }
-
-  getProducts() {
-    
-    const keys = [];
-    database.then( (d) => {
-      var uids = Object.keys(d.Users);
-      var keys = [];
-      for(uid of uids) {
-        Object.keys(d.Users[uid].products).forEach( (key) => keys.push(key));
-      }
-      var products = [];
-      
-      for(const uid of uids) {
-        for(const key of keys) {
-          storage.child(`${uid}/${key}`).getDownloadURL()
-          .then( (uri) => {
-            products.push( {uri: uri, text: d.Users[uid].products[key] } )
-          } )
-          
-        }
-      }
-
-      this.setState({ products })
-    })
-    .catch( (err) => {console.log(err) })
-
-    
-    // .then((products) => {
-    //   this.setState({ products }) 
-    // });
-    
-    
-
-    
-    
-    
+  buyProduct() {
+    this.props.navigation.navigate('BuyProduct')
   }
+
 
   render() {
-    console.log(this.state.products);
+    var {params} = this.props.navigation.state;
+    
     return (
       <ScrollView
              contentContainerStyle={{
@@ -80,15 +37,15 @@ class MarketPlace extends Component {
               
       >
 
-      {this.state.products.map( (product) => 
+      {params.map( (product) => 
         ( 
           <Card style={{flex: 0}}>
             <CardItem>
               <Left>
                 
                 <Body>
-                  <Text>NativeBase</Text>
-                  <Text note>April 15, 2016</Text>
+                  <Text>{product.text.name}</Text>
+                  <Text note>{product.text.gender}</Text>
                 </Body>
               </Left>
             </CardItem>
@@ -96,15 +53,15 @@ class MarketPlace extends Component {
               <Body>
                 <Image source={{uri: product.uri}} style={{height: 150, width: 150}}/>
                 <Text>
-                  //Your text here
+                  {product.text.description}
                 </Text>
               </Body>
             </CardItem>
             <CardItem>
               <Left>
-                <Button transparent textStyle={{color: '#87838B'}}>
+                <Button onPress={ () => {this.props.navigation.navigate('CustomChat', {uid: product.uid})} } transparent textStyle={{color: '#87838B'}}>
                   <Icon name="logo-github" />
-                  <Text>1,926 stars</Text>
+                  <Text>${product.text.price}</Text>
                 </Button>
               </Left>
             </CardItem>

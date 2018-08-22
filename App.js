@@ -15,6 +15,8 @@ import AddButton from './src/components/AddButton';
 import CreateItem from './src/views/CreateItem.js'
 import EditProfile from './src/views/EditProfile.js';
 import MarketPlace from './src/views/MarketPlace.js';
+import CustomChat from './src/views/CustomChat.js';
+
 
 
 const instructions = Platform.select({
@@ -41,6 +43,8 @@ const RootStack = createStackNavigator({
   CreateItem: CreateItem,
 
   MarketPlace: MarketPlace,
+
+  CustomChat: CustomChat,
 
   EditProfile: EditProfile,
 

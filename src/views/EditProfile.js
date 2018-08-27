@@ -40,6 +40,11 @@ class EditProfile extends Component {
 
     return firebase.database().ref().update(updates);
   }
+
+  createUser(uid, data) {
+    console.log(uid);
+  }
+
   render() {
     const uid = firebase.auth().currentUser.uid;
     return (
@@ -66,7 +71,7 @@ class EditProfile extends Component {
             large
             icon={{name: 'save', type: 'font-awesome'}}
             title='SAVE'
-            onPress={() => this.updateFirebase(uid, this.state)} 
+            onPress={() => {this.updateFirebase(uid, this.state); this.createUser(uid, this.state); } } 
         />
         
       </View>

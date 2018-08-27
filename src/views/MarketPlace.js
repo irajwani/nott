@@ -59,7 +59,7 @@ class MarketPlace extends Component {
             </CardItem>
             <CardItem>
               <Left>
-                <Button onPress={ () => {this.props.navigation.navigate('CustomChat', {uid: product.uid})} } transparent textStyle={{color: '#87838B'}}>
+                <Button onPress={ () => {this.props.navigation.navigate('CustomChat', {key: product.key})} } transparent textStyle={{color: '#87838B'}}>
                   <Icon name="logo-github" />
                   <Text>${product.text.price}</Text>
                 </Button>

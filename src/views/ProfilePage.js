@@ -31,8 +31,10 @@ class ProfilePage extends Component {
     
     const keys = [];
     database.then( (d) => {
+      //get list of uids for all users
       var uids = Object.keys(d.Users);
       var keys = [];
+      //get all keys for each product iteratively across each user
       for(uid of uids) {
         Object.keys(d.Users[uid].products).forEach( (key) => keys.push(key));
       }
@@ -40,10 +42,18 @@ class ProfilePage extends Component {
       
       for(const uid of uids) {
         for(const key of keys) {
-          storage.child(`${uid}/${key}`).getDownloadURL()
-          .then( (uri) => {
-            products.push( {uid: uid, uri: uri, text: d.Users[uid].products[key] } )
-          } )
+
+          if( Object.keys(d.Users[uid].products).includes(key)  ) {
+
+            storage.child(`${uid}/${key}`).getDownloadURL()
+            .then( (uri) => {
+              products.push( {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] } )
+            } )
+
+
+          }
+
+          
           
         }
       }

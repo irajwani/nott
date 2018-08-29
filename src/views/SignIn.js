@@ -8,6 +8,7 @@ import {Button} from 'react-native-elements'
 import styles from '../styles.js';
 //import GeoAttendance from './geoattendance.js';
 import ProfilePage from './ProfilePage';
+import HomeScreen from './HomeScreen.js';
 var firebase = require("firebase");
 
 //var database = firebase.database();
@@ -173,7 +174,7 @@ class SignIn extends Component {
     if(this.state.isGetting == false) 
          {
           console.log(this.state.uid); 
-          return (<ProfilePage uid={this.state.uid} name={this.state.details.name}/>) 
+          return ( <ProfilePage uid={this.state.uid} /> ) 
          }
     else {return (
             

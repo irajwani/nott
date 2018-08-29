@@ -17,6 +17,9 @@ class ProfilePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      name: 'khjkbkvjv',
+      email: '',
+      uri: '',
       sellItem: false,
       products: [],
     }
@@ -28,7 +31,7 @@ class ProfilePage extends Component {
   }
 
   getProducts() {
-    
+    var your_uid = firebase.auth().currentUser.uid;
     const keys = [];
     database.then( (d) => {
       //get list of uids for all users
@@ -58,40 +61,25 @@ class ProfilePage extends Component {
         }
       }
 
-      
-
-      this.setState({ products })
+      var {uri} = d.Users[your_uid].profile
+      var name = d.Users[your_uid].profile.name;
+      var email = d.Users[your_uid].profile.email;
+      console.log(name);
+      this.setState({ name, email, uri, products })
     })
     .catch( (err) => {console.log(err) })
     
   }
-  
-  render() {
-    console.log(this.state.products);
-    if(this.state.sellItem) {
-      console.log(this.props.uid);
-      return ( <CreateItem uid={this.props.uid} /> )
-    }
 
-    
-    
+  render() {
     return (
-      <View style={styles.container}>
-      
-        <ImageBackground
-            style={styles.pattern}
-            source={require('../images/profile_bg.jpg')}
-          >
-        
-        
-          <Image style= {styles.avatar} source={require('../images/blank.jpg')} />
-          <Text> {this.props.name} </Text>
-          <View style={styles.locationbar}>
-            <Icon name='rocket' />
-            <Text>Hails from: {this.props.location}</Text>
-          </View>
-        </ImageBackground> 
-        
+
+      <View style={ {flexDirection: 'column', justifyContent: 'center'} }>
+
+        {this.state.uri ? <Image style= {styles.avatar} source={ {uri: this.state.uri} }/>
+        : <Image style= {styles.avatar} source={require('../images/blank.jpg')}/>} 
+        <Text>{this.state.name}</Text>
+        <Text>{this.state.email}</Text>
         <Button
             large
             icon={{name: 'user', type: 'font-awesome'}}
@@ -104,7 +92,7 @@ class ProfilePage extends Component {
             large
             icon={{name: 'plus', type: 'font-awesome'}}
             title='SELL AN ITEM'
-            onPress={() => this.setState({sellItem: true})} 
+            onPress={() => this.props.navigation.navigate('CreateItem')} 
 
         />
 
@@ -121,19 +109,20 @@ class ProfilePage extends Component {
                     }}
                     containerStyle={{ marginTop: 20, marginBottom: 20 }} 
                     onPress={ () => this.props.navigation.navigate('MarketPlace', this.state.products) } />  
-        
-
       </View>
+
+
     )
-  
+
+
   }
+
 }
 
 export default withNavigation(ProfilePage)
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'column'
   },
 

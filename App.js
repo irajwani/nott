@@ -7,8 +7,9 @@ import {
 } from 'react-native';
 import { createStackNavigator } from 'react-navigation'; // Version can be specified in package.json
 
-import GalleryEntry from './src/views/GalleryEntry.js'
-import SignIn from './src/views/SignIn.js'
+import GalleryEntry from './src/views/GalleryEntry.js';
+import SignIn from './src/views/SignIn.js';
+import HomeScreen from './src/views/HomeScreen.js';
 import ProfilePage from './src/views/ProfilePage.js';
 import MyCustomCamera from './src/components/Camera';
 import AddButton from './src/components/AddButton';
@@ -16,6 +17,9 @@ import CreateItem from './src/views/CreateItem.js'
 import EditProfile from './src/views/EditProfile.js';
 import MarketPlace from './src/views/MarketPlace.js';
 import CustomChat from './src/views/CustomChat.js';
+import PictureAddButton from './src/components/PictureAddButton.js';
+import PictureCamera from './src/components/PictureCamera.js';
+
 
 
 
@@ -25,6 +29,8 @@ const RootStack = createStackNavigator({
 
   SignIn: SignIn,
 
+  HomeScreen: HomeScreen,
+
   Gallery: GalleryEntry,
 
   Profile: ProfilePage,
@@ -32,6 +38,10 @@ const RootStack = createStackNavigator({
   AddButton: AddButton,
 
   Camera: MyCustomCamera,
+
+  PictureAddButton: PictureAddButton,
+
+  PictureCamera: PictureCamera,
 
   CreateItem: CreateItem,
 

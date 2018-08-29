@@ -8,8 +8,7 @@ import CreateItem from './CreateItem.js';
 import firebase from '../cloud/firebase.js';
 import {database} from '../cloud/database';
 import {storage} from '../cloud/storage';
-
-
+import MarketPlace from './MarketPlace.js';
 
 const resizeMode = 'center';
 
@@ -22,6 +21,7 @@ class ProfilePage extends Component {
       uri: '',
       sellItem: false,
       products: [],
+      showMarket: false,
     }
 
   }
@@ -72,6 +72,11 @@ class ProfilePage extends Component {
   }
 
   render() {
+
+    if(this.state.showMarket) {
+      return ( <MarketPlace products = {this.state.products} />)
+    }
+
     return (
 
       <View style={ {flexDirection: 'column', justifyContent: 'center'} }>
@@ -80,21 +85,7 @@ class ProfilePage extends Component {
         : <Image style= {styles.avatar} source={require('../images/blank.jpg')}/>} 
         <Text>{this.state.name}</Text>
         <Text>{this.state.email}</Text>
-        <Button
-            large
-            icon={{name: 'user', type: 'font-awesome'}}
-            title='EDIT PROFILE'
-            onPress={() => {this.props.navigation.navigate('EditProfile')}} 
-
-        />
         
-        <Button
-            large
-            icon={{name: 'plus', type: 'font-awesome'}}
-            title='SELL AN ITEM'
-            onPress={() => this.props.navigation.navigate('CreateItem')} 
-
-        />
 
         <Button
                     title='SellMyStyle Market' 
@@ -108,7 +99,7 @@ class ProfilePage extends Component {
                     borderRadius: 5
                     }}
                     containerStyle={{ marginTop: 20, marginBottom: 20 }} 
-                    onPress={ () => this.props.navigation.navigate('MarketPlace', this.state.products) } />  
+                    onPress={ () => {this.setState( {showMarket: true} )} } />  
       </View>
 
 

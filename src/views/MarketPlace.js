@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import { View, Image, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
-import firebase from '../cloud/firebase';
+import firebase from '../cloud/firebase.js';
+import {database} from '../cloud/database';
+import {storage} from '../cloud/storage';
+
 
 class MarketPlace extends Component {
   constructor(props) {
@@ -12,22 +15,12 @@ class MarketPlace extends Component {
         refreshing: false,
       };
   }
-
-  componentDidMount() {
-    var updates = {};
-    var {params} = this.props.navigation.state;
-    updates['/Products/'] = params;
-    firebase.database().ref().update(updates);
-  }
-
-  buyProduct() {
-    this.props.navigation.navigate('BuyProduct')
-  }
+  
 
 
   render() {
-    var {params} = this.props.navigation.state;
     
+    console.log(this.props.products);
     return (
       <ScrollView
              contentContainerStyle={{
@@ -37,9 +30,9 @@ class MarketPlace extends Component {
               
       >
 
-      {params.map( (product) => 
+      {this.props.products.map( (product) => 
         ( 
-          <Card style={{flex: 0}}>
+          <Card style={{flex: 4}}>
             <CardItem>
               <Left>
                 
@@ -79,7 +72,7 @@ class MarketPlace extends Component {
   }
 }
 
-export default withNavigation(MarketPlace);
+export default MarketPlace;
 
 const styles = StyleSheet.create({})
 

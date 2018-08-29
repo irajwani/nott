@@ -59,12 +59,12 @@ const RootStack = createStackNavigator({
   navigationOptions: {
     title: 'SellMyStyle',
     headerStyle: {
-      backgroundColor: '#800000',
+      backgroundColor: '#121fb5',
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
       fontWeight: 'bold',
-      fontFamily: 'American Typewriter'
+      fontFamily: 'Verdana'
     },
   },
 }

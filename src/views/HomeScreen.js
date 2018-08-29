@@ -5,14 +5,17 @@ import { withNavigation, TabNavigator, TabBarBottom } from 'react-navigation'; /
 import ProfilePage from './ProfilePage';
 import EditProfile from './EditProfile';
 import MarketPlace from './MarketPlace';
+import CreateItem from './CreateItem';
 
 
 
 const HomeScreen = TabNavigator(
             {
+
               ProfilePage: { screen: ProfilePage },
+              CreateItem: {screen: CreateItem},
               EditProfile: { screen: EditProfile },
-              MarketPlace: {screen: MarketPlace},
+              
             },
             {
               navigationOptions: ({ navigation }) => ({
@@ -20,11 +23,11 @@ const HomeScreen = TabNavigator(
                   const { routeName } = navigation.state;
                   let iconName;
                   if (routeName === 'ProfilePage') {
-                    iconName = 'plus';
+                    iconName = 'user-circle';
                   } else if (routeName === 'EditProfile') {
-                    iconName = 'plus';
-                  } else if (routeName === 'MarketPlace') {
-                      iconName = 'plus';
+                    iconName = 'edit';
+                  } else if (routeName === 'CreateItem') {
+                      iconName = 'plus-circle';
                     }
           
                   // You can return any component that you like here! We usually use an
@@ -35,8 +38,8 @@ const HomeScreen = TabNavigator(
               tabBarComponent: TabBarBottom,
               tabBarPosition: 'bottom',
               tabBarOptions: {
-                activeTintColor: 'tomato',
-                inactiveTintColor: 'gray',
+                activeTintColor: '#121fb5',
+                inactiveTintColor: '#8dc999',
               },
               animationEnabled: false,
               swipeEnabled: false,

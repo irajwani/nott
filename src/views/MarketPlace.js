@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, ScrollView, RefreshControl } from 'react-nativ
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
 import firebase from '../cloud/firebase.js';
-import {database} from '../cloud/database';
+import {database, p} from '../cloud/database';
 import {storage} from '../cloud/storage';
 
 
@@ -11,16 +11,83 @@ class MarketPlace extends Component {
   constructor(props) {
       super(props);
       this.state = {
-        products: [],
         refreshing: false,
+        isGetting: true,
       };
   }
+
+  componentWillMount() {
+    setTimeout(() => {
+      this.getProducts();
+    }, 3000);
+  }
+  
+  getProducts() {
+    
+    const keys = [];
+    database.then( (d) => {
+      //get list of uids for all users
+      var p = d.Products;
+      console.log(p);
+      this.setState({ p });
+      var uids = Object.keys(d.Users);
+      console.log(uids)
+      var keys = [];
+      //get all keys for each product iteratively across each user
+      for(uid of uids) {
+        if(Object.keys(d.Users[uid]).includes('products') ) {
+          Object.keys(d.Users[uid].products).forEach( (key) => keys.push(key));
+        }
+      }
+      console.log(keys);
+      var products = [];
+      
+      for(const uid of uids) {
+        for(const key of keys) {
+
+          if(Object.keys(d.Users[uid]).includes('products') ) {
+
+            if( Object.keys(d.Users[uid].products).includes(key)  ) {
+
+              storage.child(`${uid}/${key}`).getDownloadURL()
+              .then( (uri) => {
+                products.push( {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] } )
+              } )
+
+
+            }
+          
+          }
+
+          
+          
+        }
+      }
+      
+
+    })
+    .then( () => { this.setState( {isGetting: false} );  } )
+    .catch( (err) => {console.log(err) })
+    
+  }
+
+  // componentWillMount() {
+  //   var products = this.getProducts();
+  //   return products;
+  // }
   
 
 
   render() {
+
+    if(this.state.isGetting) {
+      return ( 
+        <View>
+          <Text>Loading...</Text>
+        </View>
+      )
+    }
     
-    console.log(this.props.products);
     return (
       <ScrollView
              contentContainerStyle={{
@@ -30,7 +97,7 @@ class MarketPlace extends Component {
               
       >
 
-      {this.props.products.map( (product) => 
+      {this.state.p.map( (product) => 
         ( 
           <Card style={{flex: 4}}>
             <CardItem>
@@ -69,6 +136,7 @@ class MarketPlace extends Component {
 
       </ScrollView>          
     )
+  
   }
 }
 

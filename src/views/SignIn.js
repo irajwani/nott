@@ -156,7 +156,9 @@ class SignIn extends Component {
                         <ActivityIndicator size='large' color="#0000ff"/>
                    </View>
         }
-        return <Button
+        return (
+            <View>
+        <Button
                     title='Sign In' 
                     titleStyle={{ fontWeight: "700" }}
                     buttonStyle={{
@@ -168,28 +170,19 @@ class SignIn extends Component {
                     borderRadius: 5
                     }}
                     containerStyle={{ marginTop: 20, marginBottom: 20 }} onPress={this.onSignInPress.bind(this)} />;
-    }
-
-    renderRegistrationButtonOrLoading() {
-
-        if (this.state.loading) {
-            return <View style={{flex: 1}}>
-                        <ActivityIndicator size='large' color="#0000ff"/>
-                   </View>
-        }
-
-        return <Button
-                    title='Sign Up' 
-                    titleStyle={{ fontWeight: "700" }}
-                    buttonStyle={{
-                    backgroundColor: "#2ac40f",
-                    width: 300,
-                    height: 45,
-                    borderColor: "transparent",
-                    borderWidth: 0,
-                    borderRadius: 5
-                    }}
-                    containerStyle={{ marginTop: 20, marginBottom: 20 }} onPress={this.onSignUpPress.bind(this)} />;
+                <Button
+                title='Sign Up' 
+                titleStyle={{ fontWeight: "700" }}
+                buttonStyle={{
+                backgroundColor: "#2ac40f",
+                width: 300,
+                height: 45,
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 5
+                }}
+                containerStyle={{ marginTop: 20, marginBottom: 20 }} onPress={this.onSignUpPress.bind(this)} />;
+        </View> )
     }
 
     ///////////////////
@@ -250,7 +243,7 @@ class SignIn extends Component {
                     inputStyle={{ color: '#800000' }}
                 />
                   {this.renderButtonOrLoading()}
-                  {this.renderRegistrationButtonOrLoading()}
+                  
                 
 
                  

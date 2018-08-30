@@ -36,7 +36,7 @@ class CreateItem extends Component {
           months: 0,
           insta: '',
           description: '',
-          
+          typing: true,
       }
   }
 
@@ -236,7 +236,8 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
     const {params} = this.props.navigation.state
     const pictureuri = params ? params.uri : 'nothing here'
     const picturebase64 = params ? params.base64 : 'nothing here'
-    var conditionMet = (this.state.price > 0) & (this.state.condition)
+    var conditionMet = (this.state.name) && (this.state.months > 0) && (this.state.price > 0)
+    console.log(conditionMet);
     //console.log(pictureuri);
     //this.setState({uri: params.uri})
     //this.setState(incrementPrice);
@@ -325,7 +326,7 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
                     backgroundColor={'#F9F7F6'}
                     inputStyle={{ color: '#800000' }}
             />
-            <Text>{this.formatMoney(this.state.price)}</Text>
+            <Text>{this.formatMoney(this.state.original_price)}</Text>
 
             {/* Size */}
             <Text style = { styles.promptText }> Select a Size </Text>
@@ -366,8 +367,12 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
                 />
 
             {/* Product Description/Material */}
-            <KeyboardAvoidingView behavior='position' style={signInContainer}
+            <KeyboardAvoidingView behavior='padding' enabled={this.state.typing}
                  >
+            <Button 
+                title='Press if done typing'
+                onPress = {() => {this.setState( { typing: false } )}}
+            />     
             <TextField 
                 label="Description (Describe the condition/attributes of the product)"
                 value={this.state.description}
@@ -386,7 +391,7 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
                 onPress={ () => {
                     this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid , this.state.name);
                 }}
-                disabled={conditionMet ? false : true}
+                disabled={ conditionMet ? false : true}
             />
 
          </ScrollView>

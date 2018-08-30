@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View, Image, ImageBackground } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome';
-import AddButton from '../components/AddButton.js';
 import {Button} from 'react-native-elements'
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
-import CreateItem from './CreateItem.js';
 import firebase from '../cloud/firebase.js';
 import {database} from '../cloud/database';
 import {storage} from '../cloud/storage';
@@ -36,24 +34,32 @@ class ProfilePage extends Component {
     database.then( (d) => {
       //get list of uids for all users
       var uids = Object.keys(d.Users);
+      console.log(uids)
       var keys = [];
       //get all keys for each product iteratively across each user
       for(uid of uids) {
-        Object.keys(d.Users[uid].products).forEach( (key) => keys.push(key));
+        if(Object.keys(d.Users[uid]).includes('products') ) {
+          Object.keys(d.Users[uid].products).forEach( (key) => keys.push(key));
+        }
       }
+      console.log(keys);
       var products = [];
       
       for(const uid of uids) {
         for(const key of keys) {
 
-          if( Object.keys(d.Users[uid].products).includes(key)  ) {
+          if(Object.keys(d.Users[uid]).includes('products') ) {
 
-            storage.child(`${uid}/${key}`).getDownloadURL()
-            .then( (uri) => {
-              products.push( {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] } )
-            } )
+            if( Object.keys(d.Users[uid].products).includes(key)  ) {
+
+              storage.child(`${uid}/${key}`).getDownloadURL()
+              .then( (uri) => {
+                products.push( {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] } )
+              } )
 
 
+            }
+          
           }
 
           

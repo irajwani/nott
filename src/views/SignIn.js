@@ -78,6 +78,25 @@ class SignIn extends Component {
 
     }
 
+    onSignUpPress() {
+        this.setState({ error: '', loading: true });
+        const { email, pass } = this.state;
+        firebase.auth().createUserWithEmailAndPassword(email, pass)
+                    .then(() => { this.setState({ error: '', loading: false });
+                                  this.authChangeListener();  }
+                                      )
+                    .catch(() => {
+                      // console.log( 'registration error', error )
+                      // if (error.code === 'auth/email-already-in-use') {
+                      //       var credential = firebase.auth.EmailAuthProvider.credential(email, password);
+                      //
+                      //
+                      // }
+
+                      this.setState({ error: 'Authentication failed, booo hooo.', loading: false });
+                    });
+    }
+
     getData(snapshot) {
         details = {
             name: 'the many faced God',
@@ -100,15 +119,16 @@ class SignIn extends Component {
 
         firebase.auth().onAuthStateChanged( (user) => {
             if (user) {
-                var name = 'nothing here';
-                firebase.database().ref('Users/').once('value', this.getDB.bind(this), function (errorObject) {
-                    console.log("The read failed: " + errorObject.code);
-                  });
+                // var name = 'nothing here';
+                // firebase.database().ref('Users/').once('value', this.getDB.bind(this), function (errorObject) {
+                //     console.log("The read failed: " + errorObject.code);
+                //   });
 
-                firebase.database().ref('Users/' + user.uid + '/').once('value', this.getData.bind(this), function (errorObject) {
-                    console.log("The read failed: " + errorObject.code);
-                  });
-                this.setState({uid: user.uid, loggedIn: true});
+                // firebase.database().ref('Users/' + user.uid + '/').once('value', this.getData.bind(this), function (errorObject) {
+                //     console.log("The read failed: " + errorObject.code);
+                //   });
+                
+                this.setState({uid: user.uid, loggedIn: true, isGetting: false});
                 //console.log(this.state.name);
                 //alert(this.state.uid);
                 //return this.props.navigation.navigate('ga', {userid: this.state.uid});
@@ -140,7 +160,7 @@ class SignIn extends Component {
                     title='Sign In' 
                     titleStyle={{ fontWeight: "700" }}
                     buttonStyle={{
-                    backgroundColor: "#800000",
+                    backgroundColor: "#121fb5",
                     width: 300,
                     height: 45,
                     borderColor: "transparent",
@@ -162,7 +182,7 @@ class SignIn extends Component {
                     title='Sign Up' 
                     titleStyle={{ fontWeight: "700" }}
                     buttonStyle={{
-                    backgroundColor: "#800000",
+                    backgroundColor: "#2ac40f",
                     width: 300,
                     height: 45,
                     borderColor: "transparent",
@@ -231,19 +251,7 @@ class SignIn extends Component {
                 />
                   {this.renderButtonOrLoading()}
                   {this.renderRegistrationButtonOrLoading()}
-                <Button
-                    title='SellMyStyle Market' 
-                    titleStyle={{ fontWeight: "700" }}
-                    buttonStyle={{
-                    backgroundColor: "#0a3f93",
-                    width: 300,
-                    height: 45,
-                    borderColor: "transparent",
-                    borderWidth: 0,
-                    borderRadius: 5
-                    }}
-                    containerStyle={{ marginTop: 20, marginBottom: 20 }} 
-                    onPress={ () => this.props.navigation.navigate('MarketPlace') } />  
+                
 
                  
                 

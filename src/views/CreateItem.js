@@ -3,6 +3,7 @@ import { Platform, Text, Button, StyleSheet, View, Image, KeyboardAvoidingView, 
 import {withNavigation} from 'react-navigation';
 import { Hoshi, Jiro } from 'react-native-textinput-effects';
 import { TextField } from 'react-native-material-textfield';
+import NumericInput from 'react-native-numeric-input'
 import {ButtonGroup} from 'react-native-elements';
 import RNFetchBlob from 'react-native-fetch-blob';
 import AddButton from '../components/AddButton';
@@ -25,10 +26,17 @@ class CreateItem extends Component {
       this.state = {
           uri: undefined,
           name: '',
+          brand: '',
           price: 0,
-          type: 'shirt',
+          original_price: 0,
+          size: 2,
+          type: 'Trousers',
           gender: 2,
-          description: ''
+          condition: 'Slightly Used',
+          months: 0,
+          insta: '',
+          description: '',
+          
       }
   }
 
@@ -93,6 +101,48 @@ class CreateItem extends Component {
     
 //    }
 
+showPicker(gender) {
+    if (gender == 0) {
+        return ( 
+            <Picker selectedValue = {this.state.type} onValueChange={ (type) => {this.setState({type})} } >
+               <Picker.Item label = "Formal Shirts" value = "Formal Shirts" />
+               <Picker.Item label = "Casual Shirts" value = "Casual Shirts" />
+               <Picker.Item label = "Jackets" value = "Jackets" />
+               <Picker.Item label = "Suits" value = "Suits" />
+               <Picker.Item label = "Trousers" value = "Trousers" />
+               <Picker.Item label = "Jeans" value = "Jeans" />
+               <Picker.Item label = "Shoes" value = "Shoes" />
+            </Picker>
+        )
+    }
+
+    else if (gender == 1) {
+        return (
+            <Picker selectedValue = {this.state.type} onValueChange={ (type) => {this.setState({type})} } >
+               <Picker.Item label = "Watches" value = "Watches" />
+               <Picker.Item label = "Bracelets" value = "Bracelets" />
+               <Picker.Item label = "Jewellery" value = "Jewellery" />
+               <Picker.Item label = "Sunglasses" value = "Sunglasses" />
+               <Picker.Item label = "Handbags" value = "Handbags" />
+            </Picker>
+        )
+    }
+
+    else if (gender == 2) {
+        return (
+            <Picker selectedValue = {this.state.type} onValueChange={ (type) => {this.setState({type})} } >
+               <Picker.Item label = "Tops" value = "Tops" />
+               <Picker.Item label = "Skirts" value = "Skirts" />
+               <Picker.Item label = "Dresses" value = "Dresses" />
+               <Picker.Item label = "Jeans" value = "Jeans" />
+               <Picker.Item label = "Jackets" value = "Jackets" />
+               <Picker.Item label = "Coats" value = "Coats" />
+               <Picker.Item label = "Trousers" value = "Trousers" />
+            </Picker>
+        )
+    } 
+}
+
 updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
     // : if request.auth != null;
     var gender;
@@ -101,7 +151,7 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
             gender = 'Men'
             break; 
         case 1:
-            gender = 'Unisex'
+            gender = 'Accessories'
             break;
         case 2:
             gender = 'Women'
@@ -110,12 +160,40 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
             gender = 'Men'
             console.log('no gender was specified')
     }
+
+    switch(data.size) {
+        case 0:
+            data.size = 'Extra Small'
+            break; 
+        case 1:
+            data.size = 'Small'
+            break;
+        case 2:
+            data.size = 'Medium'
+            break;
+        case 3:
+            data.size = 'Large'
+            break;
+        case 4:
+            data.size = 'Extra Large'
+            break;
+        case 5:
+            data.size = 'Extra Extra Large'
+            break;
+        default:
+            data.size = 'Medium'
+            console.log('no gender was specified')
+    }
+
     var postData = {
         name: data.name,
         price: data.price,
+        original_price: data.original_price,
         type: data.type,
+        size: data.size,
         description: data.description,
         gender: gender,
+        condition: data.condition,
       };
   
     var newPostKey = firebase.database().ref().child(`Users/${uid}/products`).push().key;
@@ -158,6 +236,7 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
     const {params} = this.props.navigation.state
     const pictureuri = params ? params.uri : 'nothing here'
     const picturebase64 = params ? params.base64 : 'nothing here'
+    var conditionMet = (this.state.price > 0) & (this.state.condition)
     //console.log(pictureuri);
     //this.setState({uri: params.uri})
     //this.setState(incrementPrice);
@@ -176,15 +255,11 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
             <ButtonGroup
                 onPress={ (index) => {this.setState({gender: index})}}
                 selectedIndex={this.state.gender}
-                buttons={ ['Men', 'Unisex', 'Women'] }
+                buttons={ ['Men', 'Accessories', 'Women'] }
                 
             />
-
-        <Picker selectedValue = {this.state.type} onValueChange={ (type) => {this.setState({type})} } >
-               <Picker.Item label = "Torso" value = "shirt" />
-               <Picker.Item label = "Legs" value = "pants" />
-               <Picker.Item label = "Feet" value = "shoes" />
-            </Picker>    
+            {/* Type of clothing */}
+        {this.showPicker(this.state.gender)}
         {/* 1. Product Pictures */}
             <AddButton/>
             {/* <Image
@@ -207,10 +282,25 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
                     inputStyle={{ color: '#800000' }}
             />
             <Text>{this.state.name}</Text>
+
+            <Jiro
+                    label={'Product Brand'}
+                    value={this.state.brand}
+                    onChangeText={brand => this.setState({ brand })}
+                    autoCorrect={false}
+                    // this is used as active border color
+                    borderColor={'#800000'}
+                    // this is used to set backgroundColor of label mask.
+                    // please pass the backgroundColor of your TextInput container.
+                    backgroundColor={'#F9F7F6'}
+                    inputStyle={{ color: '#800000' }}
+            />
+            <Text>{this.state.brand}</Text>
+
         {/* 3. Product Price */}
 
             <Jiro
-                    label={'Product Price'}
+                    label={'Selling Price'}
                     value={this.state.price}
                     onChangeText={price => this.setState({ price })}
                     autoCorrect={false}
@@ -222,8 +312,62 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
                     inputStyle={{ color: '#800000' }}
             />
             <Text>{this.formatMoney(this.state.price)}</Text>
-            <KeyboardAvoidingView behavior='padding'
-                style={signInContainer} >
+            {/* Original Price */}
+            <Jiro
+                    label={'Original Price'}
+                    value={this.state.original_price}
+                    onChangeText={original_price => this.setState({ original_price })}
+                    autoCorrect={false}
+                    // this is used as active border color
+                    borderColor={'#800000'}
+                    // this is used to set backgroundColor of label mask.
+                    // please pass the backgroundColor of your TextInput container.
+                    backgroundColor={'#F9F7F6'}
+                    inputStyle={{ color: '#800000' }}
+            />
+            <Text>{this.formatMoney(this.state.price)}</Text>
+
+            {/* Size */}
+            <Text style = { styles.promptText }> Select a Size </Text>
+            <ButtonGroup
+            onPress={ (index) => {this.setState({size: index})}}
+            selectedIndex={this.state.size}
+            buttons={ ['XS', 'S', 'M', 'L', 'XL', 'XXL'] }
+                
+            />
+            {/* product condition */}
+            <Text style={styles.promptText}>Product's condition</Text>
+            <Picker selectedValue = {this.state.condition} onValueChange={ (condition) => {this.setState({condition})} } >
+               <Picker.Item label = "Brand New" value = "Brand New" />
+               <Picker.Item label = "Slightly Used" value = "Slightly Used" />
+               <Picker.Item label = "Worn Out" value = "Worn Out" />
+            </Picker>
+
+            {/* product age (months) */}
+
+             <NumericInput 
+                value={this.state.months} 
+                onChange={months => this.setState({months})} 
+                type='plus-minus'
+                initValue={0}
+                minValue={0}
+                maxValue={200}
+                totalWidth={240} 
+                totalHeight={50} 
+                iconSize={25}
+                valueType='real'
+                rounded 
+                textColor='#B0228C' 
+                iconStyle={{ color: 'white' }} 
+                upDownButtonsBackgroundColor='#E56B70'
+                rightButtonBackgroundColor='#EA3788' 
+                leftButtonBackgroundColor='#E56B70'
+                containerStyle={ {justifyContent: 'space-evenly'} }    
+                />
+
+            {/* Product Description/Material */}
+            <KeyboardAvoidingView behavior='position' style={signInContainer}
+                 >
             <TextField 
                 label="Description (Describe the condition/attributes of the product)"
                 value={this.state.description}
@@ -242,6 +386,7 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
                 onPress={ () => {
                     this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid , this.state.name);
                 }}
+                disabled={conditionMet ? false : true}
             />
 
          </ScrollView>
@@ -256,7 +401,9 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
 const styles = StyleSheet.create({
     imageadder: {
         flexDirection: 'row'
-    }
+    },
+
+    promptText: {fontSize: 12, fontStyle: 'normal', textAlign: 'center'}
 })
 
 export default withNavigation(CreateItem)

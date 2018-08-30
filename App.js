@@ -19,9 +19,7 @@ import MarketPlace from './src/views/MarketPlace.js';
 import CustomChat from './src/views/CustomChat.js';
 import PictureAddButton from './src/components/PictureAddButton.js';
 import PictureCamera from './src/components/PictureCamera.js';
-
-
-
+import Demo from './src/views/Demo.js';
 
 type Props = {};
 

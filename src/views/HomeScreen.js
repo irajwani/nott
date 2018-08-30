@@ -3,7 +3,6 @@ import { Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { withNavigation, TabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
 import ProfilePage from './ProfilePage';
-import EditProfile from './EditProfile';
 import MarketPlace from './MarketPlace';
 import CreateItem from './CreateItem';
 
@@ -12,9 +11,9 @@ import CreateItem from './CreateItem';
 const HomeScreen = TabNavigator(
             {
 
-              ProfilePage: { screen: ProfilePage },
-              CreateItem: {screen: CreateItem},
-              EditProfile: { screen: EditProfile },
+              Profile: { screen: ProfilePage },
+              Market: {screen: MarketPlace},
+              Sell: {screen: CreateItem},
               
             },
             {
@@ -22,11 +21,11 @@ const HomeScreen = TabNavigator(
                 tabBarIcon: ({ focused, tintColor }) => {
                   const { routeName } = navigation.state;
                   let iconName;
-                  if (routeName === 'ProfilePage') {
+                  if (routeName === 'Profile') {
                     iconName = 'user-circle';
-                  } else if (routeName === 'EditProfile') {
-                    iconName = 'edit';
-                  } else if (routeName === 'CreateItem') {
+                  } else if (routeName === 'Market') {
+                    iconName = 'shopping-bag';
+                  } else if (routeName === 'Sell') {
                       iconName = 'plus-circle';
                     }
           

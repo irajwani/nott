@@ -85,27 +85,24 @@ class ProfilePage extends Component {
 
     return (
 
-      <View style={ {flexDirection: 'column', justifyContent: 'center'} }>
+      <View style={styles.container}>
 
-        {this.state.uri ? <Image style= {styles.avatar} source={ {uri: this.state.uri} }/>
-        : <Image style= {styles.avatar} source={require('../images/blank.jpg')}/>} 
-        <Text>{this.state.name}</Text>
-        <Text>{this.state.email}</Text>
+        <ImageBackground style={styles.headerBackground} source={require('../images/profile_bg.jpg')}>
+        <View style={styles.header}>
+          <View style={styles.profilepicWrap}>
+          {this.state.uri ? <Image style= {styles.profilepic} source={ {uri: this.state.uri} }/>
+        : <Image style= {styles.profilepic} source={require('../images/blank.jpg')}/>} 
+          </View>
+
+          <Text style={styles.name}>{this.state.name}</Text>
+          <Text style={styles.pos}>{this.state.email} </Text>
+          <Icon.Button name="edit" backgroundColor="#3b5998" onPress={() => {this.props.navigation.navigate('EditProfile')}}>
+            <Text style={{fontFamily: 'Arial', fontSize: 15}}>Edit Profile</Text>
+          </Icon.Button>
+        </View>
+      </ImageBackground>
         
 
-        <Button
-                    title='SellMyStyle Market' 
-                    titleStyle={{ fontWeight: "700" }}
-                    buttonStyle={{
-                    backgroundColor: "#0a3f93",
-                    width: 300,
-                    height: 45,
-                    borderColor: "transparent",
-                    borderWidth: 0,
-                    borderRadius: 5
-                    }}
-                    containerStyle={{ marginTop: 20, marginBottom: 20 }} 
-                    onPress={ () => {this.setState( {showMarket: true} )} } />  
       </View>
 
 
@@ -120,29 +117,51 @@ export default withNavigation(ProfilePage)
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column'
-  },
-
-  avatar: {
-    height: 30,
-    width: 30
-  },
-
-  locationbar: {
-    flexDirection: 'row'
-  },
-
-  pattern: {
-    backgroundColor: '#ccc',
     flex: 1,
-    position: 'absolute',
-    width: '100%',
-    height: '30%',
-    justifyContent: 'center',
+    backgroundColor: '#000',
+
   },
 
-  
+  headerBackground: {
+    flex: 1,
+    width: null,
+    alignSelf: 'stretch'
+  },
+  header: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(0,0,0, 0.5)',
+  },
+  profilepicWrap: {
+    width: 180,
+    height: 180,
+    borderRadius: 100,
+    borderColor: 'rgba(0,0,0,0.4)',
+    borderWidth: 16,
+  },
+  profilepic: {
+    flex: 1,
+    width: null,
+    alignSelf: 'stretch',
+    borderRadius: 100,
+    borderColor: '#fff',
+    borderWidth: 4
+  },
+  name: {
+    marginTop: 20,
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold'
+  },
+  pos: {
+    fontSize: 16,
+    color: '#0394c0',
+    fontWeight: '600',
+    fontStyle: 'italic'
+  }
 
-})
+});
 
 

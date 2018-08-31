@@ -20,6 +20,8 @@ import CustomChat from './src/views/CustomChat.js';
 import PictureAddButton from './src/components/PictureAddButton.js';
 import PictureCamera from './src/components/PictureCamera.js';
 import Demo from './src/views/Demo.js';
+import Demotwo from './src/views/Demotwo.js';
+
 
 type Props = {};
 
@@ -77,7 +79,7 @@ export default class App extends Component<Props> {
     console.log('Initializing Application')
     return (
       
-        <RootStack />
+        <Demotwo />
       
     );
   }

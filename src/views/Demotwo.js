@@ -8,6 +8,21 @@ import Accordion from 'react-native-collapsible/Accordion';
 const BACON_IPSUM =
   'Bacon ipsum dolor amet chuck turducken landjaeger tongue spare ribs. Picanha beef prosciutto meatball turkey shoulder shank salami cupim doner jowl pork belly cow. Chicken shankle rump swine tail frankfurter meatloaf ground round flank ham hock tongue shank andouille boudin brisket. ';
 
+const Products = [
+    {header: 'h1', key: '483778448', text: 'yo yo'},
+    {header: 'h2', key: 'jkadh8401839', text: 'yo'},
+    {header: 'h3', key: '9w34jkdn', text: 'yo yo yoy '}
+]
+
+const selectors = []
+var i = 0;
+for(var p of Products) {
+    selectors.push( { value: i, title: p.text } );
+    i++;
+}
+
+
+
 const CONTENT = [
   {
     title: 'First',
@@ -46,7 +61,7 @@ const SELECTORS = [
   },
 ];
 
-export default class Demo extends Component {
+export default class Demotwo extends Component {
   state = {
     activeSection: false,
     collapsed: true,
@@ -68,7 +83,7 @@ export default class Demo extends Component {
         style={[styles.header, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
       >
-        <Text style={styles.headerText}>{section.title}</Text>
+        <Text>{section.text}</Text>
       </Animatable.View>
     );
   };
@@ -81,7 +96,7 @@ export default class Demo extends Component {
         transition="backgroundColor"
       >
         <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
-          {section.content}
+          {section.key}
         </Animatable.Text>
       </Animatable.View>
     );
@@ -103,7 +118,7 @@ export default class Demo extends Component {
         </Collapsible>
         <Accordion
           activeSection={this.state.activeSection}
-          sections={CONTENT}
+          sections={Products}
           touchableComponent={TouchableOpacity}
           renderHeader={this.renderHeader}
           renderContent={this.renderContent}

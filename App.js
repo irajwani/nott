@@ -57,7 +57,7 @@ const RootStack = createStackNavigator({
   initialRouteName: 'SignIn',
   // the shared navigationOptions, which we can always override within the component
   navigationOptions: {
-    title: 'SellMyStyle',
+    title: 'NottMyStyle',
     headerStyle: {
       backgroundColor: '#121fb5',
     },
@@ -79,7 +79,7 @@ export default class App extends Component<Props> {
     console.log('Initializing Application')
     return (
       
-        <Demotwo />
+        <RootStack />
       
     );
   }

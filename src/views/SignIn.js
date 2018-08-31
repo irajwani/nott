@@ -307,7 +307,7 @@ class SignIn extends Component {
           style={styles.signInContainer}>
                   
                 <Hoshi
-                    label={'SellMyStyle Email Address'}
+                    label={'Email Address'}
                     value={this.state.email}
                     onChangeText={email => this.setState({ email })}
                     autoCorrect={false}

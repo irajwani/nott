@@ -9,7 +9,11 @@ import styles from '../styles.js';
 //import GeoAttendance from './geoattendance.js';
 import ProfilePage from './ProfilePage';
 import HomeScreen from './HomeScreen.js';
-var firebase = require("firebase");
+import firebase from '../cloud/firebase.js';
+import {database} from '../cloud/database';
+import {storage} from '../cloud/storage';
+
+
 
 //var database = firebase.database();
 
@@ -19,7 +23,11 @@ class SignIn extends Component {
 
     constructor(props) {
       super(props);
-      this.state = { data: { imad: {age: 22, height: 510}, k: {age: 22, height: 510}}, test: 3, email: '', uid: '', pass: '', error: '', loading: false, loggedIn: false, isGetting: true};
+      this.state = { products: [], data: { imad: {age: 22, height: 510}, k: {age: 22, height: 510}}, test: 3, email: '', uid: '', pass: '', error: '', loading: false, loggedIn: false, isGetting: true};
+      }
+
+      componentWillMount() {
+          this.updateProducts();
       }
 
     componentDidMount() {
@@ -48,6 +56,10 @@ class SignIn extends Component {
     
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchID);
+    }
+
+    arrayToObject(arr, keyField) {
+        Object.assign({}, ...arr.map(item => ({[item[keyField]]: item})))
     }
     /////////
     ///////// Hello world for Login/Signup Email Authentication
@@ -114,6 +126,81 @@ class SignIn extends Component {
         console.log(this.state.data);
     }
 
+    updateProducts() {
+
+        database.then( (d) => {
+            var uids = Object.keys(d.Users);
+            console.log(uids)
+            var keys = [];
+            //get all keys for each product iteratively across each user
+            for(uid of uids) {
+                if(Object.keys(d.Users[uid]).includes('products') ) {
+                Object.keys(d.Users[uid].products).forEach( (key) => keys.push(key));
+                }
+            }
+            console.log(keys);
+            var products = [];
+            var updates = {};
+            var postData;
+            var i = 0;
+            for(const uid of uids) {
+                for(const key of keys) {
+
+                if(Object.keys(d.Users[uid]).includes('products') ) {
+
+                    if( Object.keys(d.Users[uid].products).includes(key)  ) {
+
+                    storage.child(`${uid}/${key}`).getDownloadURL()
+                    .then( (uri) => {
+                        //products.push( {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] } )
+                        //products.push( {key: key, uid: uid, uri: uri,} )
+                        //products[i] = {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key]}
+                        postData = {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] };
+                        updates['/Products/' + i + '/'] = postData;
+                        firebase.database().ref().update(updates);
+                        i++;
+
+
+                    } )
+
+
+                    }
+                
+                }
+
+                
+                
+                }
+            }
+            
+
+            
+            
+            // var productsObject = {};
+            // console.log(products)
+            // var postData = [
+            //     {id: 3, text: 4}, {id: 4, text: 'sadhd'}
+            // ]
+            // console.log(postData)
+            // var updates = {};
+            // updates['/Products'] = products;
+            // //updates['/Products'] = postData
+            // firebase.database().ref().update(updates);
+            
+            //this.setState( {products} )  
+            
+            
+            
+        })
+        .then( () => {
+            console.log(this.state.products)
+            
+        })
+        .catch( (err) => console.log(err))
+                
+
+    }
+
 
     authChangeListener() {
 
@@ -127,7 +214,7 @@ class SignIn extends Component {
                 // firebase.database().ref('Users/' + user.uid + '/').once('value', this.getData.bind(this), function (errorObject) {
                 //     console.log("The read failed: " + errorObject.code);
                 //   });
-                
+                //this.updateProducts();
                 this.setState({uid: user.uid, loggedIn: true, isGetting: false});
                 //console.log(this.state.name);
                 //alert(this.state.uid);

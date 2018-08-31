@@ -187,19 +187,22 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
 
     var postData = {
         name: data.name,
+        brand: data.brand,
         price: data.price,
-        original_price: data.original_price,
+        original_price: data.original_price ? data.original_price : 'Seller did not list original price',
         type: data.type,
         size: data.size,
-        description: data.description,
+        description: data.description ? data.description : 'Seller did not specify a description',
         gender: gender,
         condition: data.condition,
+        months: data.months
       };
   
     var newPostKey = firebase.database().ref().child(`Users/${uid}/products`).push().key;
     
     var updates = {};
     updates['/Users/' + uid + '/products/' + newPostKey + '/'] = postData;
+    
 
     return {database: firebase.database().ref().update(updates), 
             storage: new Promise((resolve, reject) => {

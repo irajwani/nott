@@ -9,14 +9,5 @@ var database = firebase.database().ref().once('value')
        } 
 )
 
-var products = firebase.database().ref('/Products/').once('value')
-.then(
-    function(snapshot) { 
-        const products = snapshot.val();
-        
-        return products
-       } 
-)
 
-var p = products.then( (p) => { return p  })
-export {database, p};
+export {database};

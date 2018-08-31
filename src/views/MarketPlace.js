@@ -19,8 +19,10 @@ class MarketPlace extends Component {
   componentWillMount() {
     setTimeout(() => {
       this.getProducts();
-    }, 3000);
+    }, 10000);
   }
+
+
   
   getProducts() {
     
@@ -30,39 +32,7 @@ class MarketPlace extends Component {
       var p = d.Products;
       console.log(p);
       this.setState({ p });
-      var uids = Object.keys(d.Users);
-      console.log(uids)
-      var keys = [];
-      //get all keys for each product iteratively across each user
-      for(uid of uids) {
-        if(Object.keys(d.Users[uid]).includes('products') ) {
-          Object.keys(d.Users[uid].products).forEach( (key) => keys.push(key));
-        }
-      }
-      console.log(keys);
-      var products = [];
       
-      for(const uid of uids) {
-        for(const key of keys) {
-
-          if(Object.keys(d.Users[uid]).includes('products') ) {
-
-            if( Object.keys(d.Users[uid].products).includes(key)  ) {
-
-              storage.child(`${uid}/${key}`).getDownloadURL()
-              .then( (uri) => {
-                products.push( {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] } )
-              } )
-
-
-            }
-          
-          }
-
-          
-          
-        }
-      }
       
 
     })
@@ -79,6 +49,8 @@ class MarketPlace extends Component {
 
 
   render() {
+
+
 
     if(this.state.isGetting) {
       return ( 

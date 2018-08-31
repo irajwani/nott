@@ -32,46 +32,13 @@ class ProfilePage extends Component {
     var your_uid = firebase.auth().currentUser.uid;
     const keys = [];
     database.then( (d) => {
-      //get list of uids for all users
-      var uids = Object.keys(d.Users);
-      console.log(uids)
-      var keys = [];
-      //get all keys for each product iteratively across each user
-      for(uid of uids) {
-        if(Object.keys(d.Users[uid]).includes('products') ) {
-          Object.keys(d.Users[uid].products).forEach( (key) => keys.push(key));
-        }
-      }
-      console.log(keys);
-      var products = [];
       
-      for(const uid of uids) {
-        for(const key of keys) {
-
-          if(Object.keys(d.Users[uid]).includes('products') ) {
-
-            if( Object.keys(d.Users[uid].products).includes(key)  ) {
-
-              storage.child(`${uid}/${key}`).getDownloadURL()
-              .then( (uri) => {
-                products.push( {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] } )
-              } )
-
-
-            }
-          
-          }
-
-          
-          
-        }
-      }
 
       var {uri} = d.Users[your_uid].profile
       var name = d.Users[your_uid].profile.name;
       var email = d.Users[your_uid].profile.email;
       console.log(name);
-      this.setState({ name, email, uri, products })
+      this.setState({ name, email, uri })
     })
     .catch( (err) => {console.log(err) })
     

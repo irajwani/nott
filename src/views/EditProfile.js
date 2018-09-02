@@ -21,31 +21,42 @@ class EditProfile extends Component {
           email: '',
           size: 1,
           uri: undefined,
+          insta: ''
       }
   }
 
   updateFirebase(data, uri, mime = 'image/jpg', uid) {
-    var postData = {
-        name: data.name,
-        email: data.email
-    }
+    
     var updates = {};
     switch(data.size) {
         case 0:
-            data.size = 'Small'
+            data.size = 'Extra Small'
             break; 
         case 1:
-            data.size = 'Medium'
+            data.size = 'Small'
             break;
         case 2:
-            data.size = 'Large'
+            data.size = 'Medium'
             break;
         case 3:
+            data.size = 'Large'
+            break;
+        case 4:
             data.size = 'Extra Large'
+            break;
+        case 5:
+            data.size = 'Extra Extra Large'
             break;
         default:
             data.size = 'Medium'
             console.log('no gender was specified')
+    }
+
+    var postData = {
+        name: data.name,
+        email: data.email,
+        size: data.size,
+        insta: data.insta
     }
 
     updates['/Users/' + uid + '/profile/' + '/'] = postData;
@@ -93,12 +104,12 @@ class EditProfile extends Component {
     const picturebase64 = params ? params.base64 : 'nothing here'
 
     return (
-      <View>
+      <View style={styles.container}>
         <Sae
             label={'FirstName LastName'}
             iconClass={FontAwesomeIcon}
             iconName={'users'}
-            iconColor={'#f95a25'}
+            iconColor={'#0a3f93'}
             value={this.state.name}
             onChangeText={name => this.setState({ name })}
             autoCorrect={false}
@@ -109,24 +120,43 @@ class EditProfile extends Component {
             label={'email@somedomain.com'}
             iconClass={FontAwesomeIcon}
             iconName={'code'}
-            iconColor={'#f95a25'}
+            iconColor={'#0a3f93'}
             value={this.state.email}
             onChangeText={email => this.setState({ email })}
             autoCorrect={false}
             inputStyle={{ color: '#4dcc0e' }}
         />
 
-        <PictureAddButton />
+        <Sae
+            label={'@instagram_handle'}
+            iconClass={FontAwesomeIcon}
+            iconName={'instagram'}
+            iconColor={'#0a3f93'}
+            value={this.state.insta}
+            onChangeText={insta => this.setState({ insta })}
+            autoCorrect={false}
+            inputStyle={{ color: '#0a3f93' }}
+        />
 
+        <PictureAddButton />
+        <Text>What size clothes do you wear?</Text>
         <ButtonGroup
             onPress={ (index) => {this.setState({size: index})}}
             selectedIndex={this.state.size}
-            buttons={ ['S', 'M', 'L', 'XL'] }
+            buttons={ ['XS', 'S', 'M', 'L', 'XL', 'XXL'] }
                 
         />
 
         <Button
             large
+            buttonStyle={{
+                backgroundColor: "#5bea94",
+                width: 280,
+                height: 80,
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 5
+            }}
             icon={{name: 'save', type: 'font-awesome'}}
             title='SAVE'
             onPress={() => {this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid ); this.createUser(uid, this.state); } } 
@@ -139,4 +169,10 @@ class EditProfile extends Component {
 
 export default withNavigation(EditProfile);
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-evenly'
+    }
+})

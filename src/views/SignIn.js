@@ -71,22 +71,13 @@ class SignIn extends Component {
                           this.authChangeListener();
                           //cant do these things:
                           //firebase.database().ref('Users/7j2AnQgioWTXP7vhiJzjwXPOdLC3/').set({name: 'Imad Rajwani', attended: 1});
-                          }).catch(() => {
-                firebase.auth().createUserWithEmailAndPassword(email, pass)
-                    .then(() => { this.setState({ error: '', loading: false });
-                                  this.authChangeListener();  }
-                                      )
-                    .catch(() => {
-                      // console.log( 'registration error', error )
-                      // if (error.code === 'auth/email-already-in-use') {
-                      //       var credential = firebase.auth.EmailAuthProvider.credential(email, password);
-                      //
-                      //
-                      // }
+                          })
+            .catch( () => {
+                this.setState( {error: 'Authentication failed, please sign up or enter correct credentials.', loading: false } );
+                alert(this.state.error);
+            }
 
-                      this.setState({ error: 'Authentication failed, booo hooo.', loading: false });
-                    });
-            });
+            )
 
     }
 

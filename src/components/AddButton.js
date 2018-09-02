@@ -17,18 +17,18 @@ class AddButton extends Component {
 
   }
 
-  cameraOrGallery(index) {
+  cameraOrGallery(index, navToComponent) {
     if (index === 0) {
       this.setState({cameraToggle: true});
-      this.launchCamera();
+      this.launchCamera(navToComponent);
 
     }
     else {this.launchGallery();}
   }
 
-  launchCamera() {
+  launchCamera(navToComponent) {
     console.log('launching camera');
-    this.props.navigation.navigate('Camera')
+    this.props.navigation.navigate('PictureCamera', {navToComponent: `${navToComponent}` })
     //<MyCustomCamera />
     
   }
@@ -51,7 +51,7 @@ class AddButton extends Component {
           options={['Camera', 'PhotoLibrary', 'cancel']}
           cancelButtonIndex={2}
           destructiveButtonIndex={1}
-          onPress={(index) => { console.log(index); this.cameraOrGallery(index) }}
+          onPress={(index) => { console.log(index); this.cameraOrGallery(index, this.props.navToComponent) }}
           />
         
         

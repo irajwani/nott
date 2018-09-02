@@ -25,7 +25,7 @@ class MarketPlace extends Component {
   componentWillMount() {
     setTimeout(() => {
       this.getProducts();
-    }, 3000);
+    }, 4);
   }
 
   //switch between collapsed and expanded states
@@ -112,7 +112,13 @@ class MarketPlace extends Component {
     }
     
     return (
-      <View style={styles.container}>
+      <ScrollView
+             contentContainerStyle={{
+                    flexGrow: 1,
+                    justifyContent: 'space-between'
+                }}
+              
+      >
         
 
         
@@ -133,7 +139,8 @@ class MarketPlace extends Component {
           duration={400}
           onChange={this.setSection}
         />
-      </View>       
+
+      </ScrollView>       
     )
   
   }

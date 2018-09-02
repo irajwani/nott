@@ -6,7 +6,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import RNFetchBlob from 'react-native-fetch-blob';
 import { Sae, Fumi } from 'react-native-textinput-effects';
 import firebase from '../cloud/firebase.js';
-import PictureAddButton from '../components/PictureAddButton.js';
+import AddButton from '../components/AddButton.js';
 
 const Blob = RNFetchBlob.polyfill.Blob;
 const fs = RNFetchBlob.fs;
@@ -105,6 +105,9 @@ class EditProfile extends Component {
 
     return (
       <View style={styles.container}>
+
+        <AddButton navToComponent = {'EditProfile'} />
+
         <Sae
             label={'FirstName LastName'}
             iconClass={FontAwesomeIcon}
@@ -138,7 +141,7 @@ class EditProfile extends Component {
             inputStyle={{ color: '#0a3f93' }}
         />
 
-        <PictureAddButton />
+        
         <Text>What size clothes do you wear?</Text>
         <ButtonGroup
             onPress={ (index) => {this.setState({size: index})}}

@@ -11,6 +11,7 @@ class PictureCamera extends Component {
   constructor(props) {
       super(props);
       this.state = {
+        navToComponent: 'HomeScreen',
         isLoading: false,
         type: RNCamera.Constants.Type.back,
         flashMode: false,
@@ -20,7 +21,8 @@ class PictureCamera extends Component {
     }
   }
   
-  takePicture() {
+  takePicture(navToComponent) {
+    console.log(navToComponent);
     this.setState({isLoading: true});
     let self = this;
     console.log('first')
@@ -29,12 +31,15 @@ class PictureCamera extends Component {
         this.setState({
             isLoading: false, pictureuri: image64.uri, picturebase64: image64.base64, pictureWidth: image64.width, pictureHeight: image64.height
         });
-        this.props.navigation.navigate('EditProfile' , {uri: this.state.pictureuri, base64: this.state.picturebase64, width: this.state.pictureWidth, height: this.state.pictureHeight})
+        this.props.navigation.navigate( `${navToComponent}`, {uri: this.state.pictureuri, base64: this.state.picturebase64, width: this.state.pictureWidth, height: this.state.pictureHeight})
     }).catch(err => console.error(err))
 
   }
   
   render() {
+    const {params} = this.props.navigation.state;
+    var navToComponent = params.navToComponent;
+
     return (
         <View style={styles.container}>
 
@@ -52,7 +57,7 @@ class PictureCamera extends Component {
         <View style = { {flexDirection: 'row'} }>
         {/* camera button */}
           <View style={styles.cambuttons}>
-              <TouchableHighlight style={styles.capture} onPress={this.takePicture.bind(this) } >
+              <TouchableHighlight style={styles.capture} onPress={this.takePicture.bind(this, navToComponent) } >
                 <Image
                   style={{width: 20, height: 20, opacity: 0.7}}
                   source={require('../images/cb.png')}
@@ -65,15 +70,16 @@ class PictureCamera extends Component {
           </View>
               {/* toggle flash mode */}
           <View style={styles.button}>
-            <TouchableHighlight onPress={ () => {this.setState({flashMode: true})}}>
+            <TouchableHighlight onPress={ () => {this.setState({flashMode: !this.state.flashMode})}}>
               {this.state.flashMode ? <Icon type='material-community' name='flashlight' /> : <Icon color='white' type='material-community' name='flashlight-off' />
                }
             </TouchableHighlight>  
           </View>
                 {/* toggle front camera */}
           <View style={styles.button}>
-            <TouchableHighlight onPress={ () => {this.setState({front: true})}}>
-              {this.state.front ? <Icon color='white' type='material-community' name='camera-front' /> : <Icon color='black' type='material-community' name='camera-front' />
+            <TouchableHighlight onPress={ () => {this.setState({front: !this.state.front})}}>
+              {this.state.front ? <Icon color='white' type='material-community' name='camera-front' /> 
+                                  : <Icon color='black' type='material-community' name='camera-front' />
                }
             </TouchableHighlight>  
           </View>

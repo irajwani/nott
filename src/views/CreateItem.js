@@ -256,6 +256,11 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
                     justifyContent: 'space-between'
                 }}
         >
+
+        {/* 1. Product Pictures */}
+            <AddButton navToComponent = {'CreateItem'} />
+
+
         {/* 0. Gender */}
             <ButtonGroup
                 onPress={ (index) => {this.setState({gender: index})}}
@@ -265,8 +270,7 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
             />
             {/* Type of clothing */}
         {this.showPicker(this.state.gender)}
-        {/* 1. Product Pictures */}
-            <AddButton/>
+        
             {/* <Image
             style={{width: '25%', height: '25%', opacity: 1.0}} 
             source={ {uri: pictureuri} } />

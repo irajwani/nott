@@ -195,7 +195,8 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
         description: data.description ? data.description : 'Seller did not specify a description',
         gender: gender,
         condition: data.condition,
-        months: data.months
+        months: data.months,
+        sold: false,
       };
   
     var newPostKey = firebase.database().ref().child(`Users/${uid}/products`).push().key;

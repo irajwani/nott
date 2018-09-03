@@ -106,7 +106,9 @@ class EditProfile extends Component {
     return (
       <View style={styles.container}>
 
-        <AddButton navToComponent = {'EditProfile'} />
+        <Text style={{textAlign: 'center'}}>Choose Profile Picture:</Text>
+        <Divider style={{  backgroundColor: '#fff', height: 8 }} />
+        <AddButton navToComponent = {'EditProfile'} pictureuri={pictureuri} />
 
         <Sae
             label={'FirstName LastName'}
@@ -164,7 +166,7 @@ class EditProfile extends Component {
             title='SAVE'
             onPress={() => {this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid ); this.createUser(uid, this.state); } } 
         />
-        
+        <Divider style={{  backgroundColor: '#fff', height: 8 }} />
       </View>
     )
   }

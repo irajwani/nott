@@ -11,16 +11,12 @@ import GalleryEntry from './src/views/GalleryEntry.js';
 import SignIn from './src/views/SignIn.js';
 import HomeScreen from './src/views/HomeScreen.js';
 import ProfilePage from './src/views/ProfilePage.js';
-import MyCustomCamera from './src/components/Camera';
 import AddButton from './src/components/AddButton';
 import CreateItem from './src/views/CreateItem.js'
 import EditProfile from './src/views/EditProfile.js';
 import MarketPlace from './src/views/MarketPlace.js';
 import CustomChat from './src/views/CustomChat.js';
-import PictureAddButton from './src/components/PictureAddButton.js';
 import PictureCamera from './src/components/PictureCamera.js';
-import Demo from './src/views/Demo.js';
-import Demotwo from './src/views/Demotwo.js';
 
 
 type Props = {};
@@ -36,10 +32,6 @@ const RootStack = createStackNavigator({
   Profile: ProfilePage,
 
   AddButton: AddButton,
-
-  Camera: MyCustomCamera,
-
-  PictureAddButton: PictureAddButton,
 
   PictureCamera: PictureCamera,
 

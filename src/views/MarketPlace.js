@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { View, Image, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
+import { View, Image, StyleSheet, ScrollView, RefreshControl, TouchableOpacity, TouchableHighlight } from 'react-native';
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
-import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body } from 'native-base';
+import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Left, Body } from 'native-base';
+import {Button} from 'react-native-elements'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import firebase from '../cloud/firebase.js';
 import {database, p} from '../cloud/database';
 import {storage} from '../cloud/storage';
@@ -20,12 +22,19 @@ class MarketPlace extends Component {
         activeSection: false,
         collapsed: true,
       };
+      this.navToChat = this.navToChat.bind(this);
   }
 
   componentWillMount() {
     setTimeout(() => {
       this.getProducts();
     }, 4);
+  }
+
+  navToChat() {
+    console.log('pressed')
+    //this.props.navigation.navigate('CustomChat', {key: key})
+    this.props.navigation.navigate('CustomChat')
   }
 
   //switch between collapsed and expanded states
@@ -45,10 +54,8 @@ class MarketPlace extends Component {
         transition="backgroundColor"
       >
         
-                <Image source={{uri: section.uri}} style={{height: 150, width: 150}}/>
-                <Text>
-                  {section.text.name}
-                </Text>
+                <Image source={{uri: section.uri}} style={{height: 180, width: 280}}/>
+                
               
 
       </Animatable.View>
@@ -62,19 +69,55 @@ class MarketPlace extends Component {
         style={[styles.content, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
       >
+          
         <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
+          {section.text.name}
+        </Animatable.Text>
+        <Animatable.Text animation={isActive ? 'fadeInDownBig' : undefined}>
+          {section.text.brand}
+        </Animatable.Text>
+        <Animatable.Text animation={isActive ? 'fadeInUpBig' : undefined}>
           {section.text.description}
         </Animatable.Text>
+        <Animatable.Text animation={isActive ? 'slideInLeft' : undefined}>
+          {section.text.gender}
+        </Animatable.Text>
+        <Animatable.Text animation={isActive ? 'slideInRight' : undefined}>
+          {section.text.type}
+        </Animatable.Text>
+        <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
+          {section.text.condition}
+        </Animatable.Text>
+        <Animatable.Text animation={isActive ? 'bounceRight' : undefined}>
+          {section.text.size}
+        </Animatable.Text>
         
-        <Button onPress={ () => {this.props.navigation.navigate('CustomChat', {key: product.key})} } transparent textStyle={{color: '#87838B'}}>
-                  <Icon name="logo-github" />
-                  <Text>${section.text.price}</Text>
-        </Button>
+        
+        <Animatable.Text animation={isActive ? 'bounceLeft' : undefined}>
+          ${section.text.price}
+        </Animatable.Text>
+
+        <Button
+            
+            buttonStyle={{
+                backgroundColor: "#000",
+                width: 100,
+                height: 40,
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 5
+            }}
+            icon={{name: 'credit-card', type: 'font-awesome'}}
+            title='BUY'
+            onPress = { () => { console.log('going to chat') } }
+            />
+        
       </Animatable.View>
     );
   }
 
   
+
   getProducts() {
     
     const keys = [];
@@ -101,8 +144,8 @@ class MarketPlace extends Component {
 
   render() {
 
-
-
+    const {navigate} = this.props.navigation
+    console.log(navigate);
     if(this.state.isGetting) {
       return ( 
         <View>
@@ -112,16 +155,22 @@ class MarketPlace extends Component {
     }
     
     return (
+
+      
       <ScrollView
              contentContainerStyle={{
+                    
+                    
                     flexGrow: 1,
-                    justifyContent: 'space-between'
+                    justifyContent: 'space-between',
+                    
                 }}
               
       >
         
 
         
+
         <Collapsible collapsed={this.state.collapsed} align="center">
           <View style={styles.content}>
             <Text>
@@ -140,7 +189,8 @@ class MarketPlace extends Component {
           onChange={this.setSection}
         />
 
-      </ScrollView>       
+      </ScrollView> 
+            
     )
   
   }
@@ -149,6 +199,12 @@ class MarketPlace extends Component {
 export default withNavigation(MarketPlace);
 
 const styles = StyleSheet.create({
+  
+  mainContainer:{
+    marginTop:15,
+    marginLeft:20,
+    marginRight:20
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -174,10 +230,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   active: {
-    backgroundColor: 'rgba(255,255,255,1)',
+    backgroundColor: '#8cdbab',
   },
   inactive: {
-    backgroundColor: 'rgba(245,252,255,1)',
+    backgroundColor: '#fff',
   },
   selectors: {
     marginBottom: 10,
@@ -210,3 +266,17 @@ const styles = StyleSheet.create({
             //     onRefresh={() => {this.getProducts();}}
 
             //     />}
+            // <Button
+            
+            // buttonStyle={{
+            //     backgroundColor: "#000",
+            //     width: 100,
+            //     height: 40,
+            //     borderColor: "transparent",
+            //     borderWidth: 0,
+            //     borderRadius: 5
+            // }}
+            // icon={{name: 'credit-card', type: 'font-awesome'}}
+            // title='BUY'
+            // onPress = { () => { navigate('CustomChat', {key: '-LLEL8jZIaK_AmjuXhUb'}) } }
+            // />

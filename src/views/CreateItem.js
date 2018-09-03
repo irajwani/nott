@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import { Platform, Text, Button, StyleSheet, View, Image, KeyboardAvoidingView, ScrollView, Picker } from 'react-native'
+import { Platform, Text, StyleSheet, View, Image, KeyboardAvoidingView, ScrollView, Picker } from 'react-native'
 import {withNavigation} from 'react-navigation';
 import { Hoshi, Jiro } from 'react-native-textinput-effects';
 import { TextField } from 'react-native-material-textfield';
 import NumericInput from 'react-native-numeric-input'
-import {ButtonGroup} from 'react-native-elements';
+import {Button, ButtonGroup, Divider} from 'react-native-elements';
 import RNFetchBlob from 'react-native-fetch-blob';
 import AddButton from '../components/AddButton';
 import accounting from 'accounting'
+import ProductLabel from '../components/ProductLabel.js';
 import {signInContainer} from '../styles.js';
 import firebase from '../cloud/firebase.js';
 
@@ -251,17 +252,21 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
       
     
         <ScrollView
-             contentContainerStyle={{
-                    flexGrow: 1,
-                    justifyContent: 'space-between'
-                }}
+            
+             contentContainerStyle={styles.contentContainer}
         >
 
+            <Divider style={{  backgroundColor: '#fff', height: 12 }} />
         {/* 1. Product Pictures */}
-            <AddButton navToComponent = {'CreateItem'} />
+            <Text style={{textAlign: 'center'}}>Picture of Product:</Text>
+            <Divider style={{  backgroundColor: '#fff', height: 8 }} />
+            <AddButton navToComponent = {'CreateItem'} pictureuri={pictureuri}/>
 
+            <Divider style={{  backgroundColor: '#fff', height: 12 }} />
 
         {/* 0. Gender */}
+        
+            <ProductLabel color='#1271b5' title='Gender'/>
             <ButtonGroup
                 onPress={ (index) => {this.setState({gender: index})}}
                 selectedIndex={this.state.gender}
@@ -269,6 +274,9 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
                 
             />
             {/* Type of clothing */}
+            <Divider style={{  backgroundColor: '#fff', height: 12 }} />
+
+            <ProductLabel color='#1271b5' title='Product Category'/>            
         {this.showPicker(this.state.gender)}
         
             {/* <Image
@@ -337,7 +345,7 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
             <Text>{this.formatMoney(this.state.original_price)}</Text>
 
             {/* Size */}
-            <Text style = { styles.promptText }> Select a Size </Text>
+            <ProductLabel color='#1271b5' title='Select a Size'/> 
             <ButtonGroup
             onPress={ (index) => {this.setState({size: index})}}
             selectedIndex={this.state.size}
@@ -345,7 +353,8 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
                 
             />
             {/* product condition */}
-            <Text style={styles.promptText}>Product's condition</Text>
+            <Divider style={{  backgroundColor: '#fff', height: 12 }} />
+            <ProductLabel color='#1271b5' title="Product's Condition"/> 
             <Picker selectedValue = {this.state.condition} onValueChange={ (condition) => {this.setState({condition})} } >
                <Picker.Item label = "Brand New" value = "Brand New" />
                <Picker.Item label = "Slightly Used" value = "Slightly Used" />
@@ -353,7 +362,7 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
             </Picker>
 
             {/* product age (months) */}
-
+            <View style = { {alignItems: 'center', flexDirection: 'column'} } >
              <NumericInput 
                 value={this.state.months} 
                 onChange={months => this.setState({months})} 
@@ -373,16 +382,27 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
                 leftButtonBackgroundColor='#E56B70'
                 containerStyle={ {justifyContent: 'space-evenly'} }    
                 />
-
+             <Text> Months since you bought the product </Text>
+            </View>
+            <Divider style={{  backgroundColor: '#fff', height: 15 }} />
             {/* Product Description/Material */}
             <KeyboardAvoidingView behavior='padding' enabled={this.state.typing}
                  >
-            <Button 
-                title='Press if done typing'
+            <Button
+                 
+                title='Press if done typing in description'
                 onPress = {() => {this.setState( { typing: false } )}}
+                buttonStyle={{
+                backgroundColor: "#3b5998",
+                width: 280,
+                height: 40,
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 5
+            }}
             />     
             <TextField 
-                label="Description (Describe the condition/attributes of the product)"
+                label="Brief description of product"
                 value={this.state.description}
                 onChangeText = { (desc)=>{this.setState({description: desc})}}
                 multiline = {true}
@@ -393,14 +413,26 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
             />
             
             </KeyboardAvoidingView>
-            
-            <Button 
-                title='CONFIRM PRODUCT DETAILS' 
-                onPress={ () => {
-                    this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid , this.state.name);
-                }}
-                disabled={ conditionMet ? false : true}
+
+            <Button
+            large
+            disabled = { conditionMet ? false : true}
+            buttonStyle={{
+                backgroundColor: "#5bea94",
+                width: 280,
+                height: 80,
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 5
+            }}
+            icon={{name: 'cloud-upload', type: 'font-awesome'}}
+            title='SUBMIT TO MARKET'
+            onPress={() => { this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid , this.state.name); } } 
             />
+
+            <Divider style={{  backgroundColor: '#fff', height: 10 }} />
+            
+            
 
          </ScrollView>
          
@@ -412,6 +444,13 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
 }
 
 const styles = StyleSheet.create({
+    contentContainer: {
+        flexGrow: 1, 
+        backgroundColor: '#fff',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+          
+    },
     imageadder: {
         flexDirection: 'row'
     },

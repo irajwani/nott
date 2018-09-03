@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Image, TouchableHighlight, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
 import { Hoshi, Jiro } from 'react-native-textinput-effects';
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
-import { PulseIndicator } from 'react-native-indicators';
+import { PacmanIndicator } from 'react-native-indicators';
 import {Button} from 'react-native-elements'
 //import AwesomeButtonRick from 'react-native-really-awesome-button/src/themes/rick'
 import styles from '../styles.js';
@@ -231,7 +231,7 @@ class SignIn extends Component {
     renderButtonOrLoading() {
         if (this.state.loading) {
             return <View style={{flex: 1}}>
-                        <ActivityIndicator size='large' color="#0000ff"/>
+                        <PacmanIndicator color='#121fb5' />
                    </View>
         }
         return (

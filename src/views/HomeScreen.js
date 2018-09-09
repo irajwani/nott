@@ -5,6 +5,7 @@ import { withNavigation, TabNavigator, TabBarBottom } from 'react-navigation'; /
 import ProfilePage from './ProfilePage';
 import MarketPlace from './MarketPlace';
 import CreateItem from './CreateItem';
+import Chats from './Chats'
 
 
 
@@ -14,6 +15,7 @@ const HomeScreen = TabNavigator(
               Profile: { screen: ProfilePage },
               Market: {screen: MarketPlace},
               Sell: {screen: CreateItem},
+              Conversations: {screen: Chats}
               
             },
             {
@@ -26,6 +28,10 @@ const HomeScreen = TabNavigator(
                   } else if (routeName === 'Market') {
                     iconName = 'shopping-bag';
                   } else if (routeName === 'Sell') {
+                      iconName = 'plus-circle';
+                    }
+
+                    else if (routeName === 'Sell') {
                       iconName = 'plus-circle';
                     }
           

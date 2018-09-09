@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Image, StyleSheet, ScrollView, RefreshControl, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { Dimensions, View, Image, StyleSheet, ScrollView, RefreshControl, TouchableOpacity, TouchableHighlight } from 'react-native';
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Left, Body } from 'native-base';
 import {Button} from 'react-native-elements'
@@ -12,6 +12,15 @@ import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
 
 
+import Chatkit from "@pusher/chatkit";
+
+const CHATKIT_SECRET_KEY = "9b627f79-3aba-48df-af55-838bbb72222d:Pk9vcGeN/h9UQNGVEv609zhjyiPKtmnd0hlBW2T4Hfw="
+const CHATKIT_TOKEN_PROVIDER_ENDPOINT = "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/7a5d48bb-1cda-4129-88fc-a7339330f5eb/token";
+const CHATKIT_INSTANCE_LOCATOR = "v1:us1:7a5d48bb-1cda-4129-88fc-a7339330f5eb";
+
+
+
+//const width = Dimensions.get('Window').width;
 
 class MarketPlace extends Component {
   constructor(props) {
@@ -29,6 +38,62 @@ class MarketPlace extends Component {
     setTimeout(() => {
       this.getProducts();
     }, 4);
+  }
+
+  subscribeToRoom(key) {
+    console.log(key)
+    const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;
+    const tokenProvider = new Chatkit.TokenProvider({
+      url: CHATKIT_TOKEN_PROVIDER_ENDPOINT
+    });
+  
+    // This will instantiate a `chatManager` object. This object can be used to subscribe to any number of rooms and users and corresponding messages.
+    // For the purpose of this example we will use single room-user pair.
+    const chatManager = new Chatkit.ChatManager({
+      instanceLocator: CHATKIT_INSTANCE_LOCATOR,
+      userId: CHATKIT_USER_NAME,
+      tokenProvider: tokenProvider
+    });
+  
+    chatManager.connect().then(currentUser => {
+      
+      this.currentUser = currentUser;
+      
+      //first find roomId from key
+      console.log(this.currentUser.rooms)
+      
+      if(this.currentUser.rooms.length > 0) {
+        //first check if you've already subscribed to this room
+        for(var room of this.currentUser.rooms) {
+         var {name} = room;
+         console.log(name);
+         if(name === key) { 
+            console.log('navigating to room')
+            this.props.navigation.navigate( 'CustomChat', {key: key} )
+                          }
+  
+        }
+  
+        //subscribe to room and navigate to it
+        
+      } else {
+        //subscribe to at least the room for this product
+        console.log('subscribe to your very first product chat room')
+        this.currentUser.joinRoom( {
+          roomId: 15324530
+        })
+        .then( (room) => console.log(room.id) )
+        
+  
+      }
+      // this.currentUser.subscribeToRoom({
+      //   //roomId: this.currentUser.rooms[0].id,
+      //   roomId: key,
+        
+      // });
+      
+      
+    });
   }
 
   navToChat() {
@@ -56,6 +121,25 @@ class MarketPlace extends Component {
         
                 <Image source={{uri: section.uri}} style={{height: 180, width: 280}}/>
                 
+                <Button
+                  
+                  buttonStyle={{
+                      backgroundColor: "#000",
+                      width: 100,
+                      height: 40,
+                      borderColor: "transparent",
+                      borderWidth: 0,
+                      borderRadius: 5
+                  }}
+                  icon={{name: 'credit-card', type: 'font-awesome'}}
+                  title='BUY'
+                  onPress = { () => { 
+                    console.log('going to chat');
+                    //subscribe to room key
+                    this.subscribeToRoom(section.key);
+                    } }
+
+                  />
               
 
       </Animatable.View>
@@ -97,20 +181,7 @@ class MarketPlace extends Component {
           ${section.text.price}
         </Animatable.Text>
 
-        <Button
-            
-            buttonStyle={{
-                backgroundColor: "#000",
-                width: 100,
-                height: 40,
-                borderColor: "transparent",
-                borderWidth: 0,
-                borderRadius: 5
-            }}
-            icon={{name: 'credit-card', type: 'font-awesome'}}
-            title='BUY'
-            onPress = { () => { console.log('going to chat') } }
-            />
+        
         
       </Animatable.View>
     );

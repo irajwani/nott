@@ -123,3 +123,13 @@ class CustomChat extends Component {
 }
 
 export default withNavigation(CustomChat);
+
+// this.currentUser keys => ["setReadCursor", "readCursor", "isTypingIn", "createRoom", "getJoinableRooms", 
+// "joinRoom", "leaveRoom", "addUserToRoom", "removeUserFromRoom", "sendMessage", "fetchMessages", 
+// "subscribeToRoom", "fetchAttachment", "updateRoom", "deleteRoom", "setReadCursorRequest", 
+// "uploadDataAttachment", "isMemberOf", "decorateMessage", "establishUserSubscription", 
+// "establishPresenceSubscription", "establishCursorSubscription", "initializeUserStore", "disconnect", 
+// "hooks", "id", "encodedId", "apiInstance", "filesInstance", "cursorsInstance", "connectionTimeout", 
+// "presenceInstance", "logger", "presenceStore", "userStore", "roomStore", "cursorStore", "typingIndicators", 
+// "roomSubscriptions", "readCursorBuffer", "userSubscription", "presenceSubscription", "cursorSubscription", 
+// "avatarURL", "createdAt", "customData", "name", "updatedAt"]

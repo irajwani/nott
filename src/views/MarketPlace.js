@@ -31,13 +31,20 @@ class MarketPlace extends Component {
         activeSection: false,
         collapsed: true,
       };
-      this.navToChat = this.navToChat.bind(this);
+      //this.navToChat = this.navToChat.bind(this);
   }
 
   componentWillMount() {
     setTimeout(() => {
       this.getProducts();
     }, 4);
+  }
+
+  findRoom(rooms, key) {
+    for(var room of rooms ) {
+      
+      if(room.name === key) {return room.id}
+    }
   }
 
   subscribeToRoom(key) {
@@ -58,39 +65,46 @@ class MarketPlace extends Component {
     chatManager.connect().then(currentUser => {
       
       this.currentUser = currentUser;
+      this.currentUser.getJoinableRooms().then( (rooms) => {  
+        console.log(rooms);
+        //this.setState({id: this.findRoom(rooms, key) });  
+
+      }  )
+      
+      setTimeout(() => {
+
+        if(this.currentUser.rooms.length > 0) {
+          //first check if you've already subscribed to this room
+          for(var room of this.currentUser.rooms) {
+           var {name} = room;
+           console.log(name);
+           if(name === key) { 
+              console.log('navigating to room')
+              console.log(this.state.id)
+              this.props.navigation.navigate( 'CustomChat', {key: key, id: this.state.id} )
+                            }
+    
+          }
+    
+          //subscribe to room and navigate to it
+          
+        } else {
+          //subscribe to at least the room for this product
+          console.log('subscribe to your very first product chat room')
+          this.currentUser.joinRoom( {
+            roomId: this.state.id
+          })
+          .then( (room) => console.log('access various info about room') )
+          
+    
+        }
+      }, 3000);
       
       //first find roomId from key
-      console.log(this.currentUser.rooms)
       
-      if(this.currentUser.rooms.length > 0) {
-        //first check if you've already subscribed to this room
-        for(var room of this.currentUser.rooms) {
-         var {name} = room;
-         console.log(name);
-         if(name === key) { 
-            console.log('navigating to room')
-            this.props.navigation.navigate( 'CustomChat', {key: key} )
-                          }
-  
-        }
-  
-        //subscribe to room and navigate to it
-        
-      } else {
-        //subscribe to at least the room for this product
-        console.log('subscribe to your very first product chat room')
-        this.currentUser.joinRoom( {
-          roomId: 15324530
-        })
-        .then( (room) => console.log(room.id) )
-        
-  
-      }
-      // this.currentUser.subscribeToRoom({
-      //   //roomId: this.currentUser.rooms[0].id,
-      //   roomId: key,
-        
-      // });
+      
+
+      
       
       
     });
@@ -120,33 +134,14 @@ class MarketPlace extends Component {
       >
         
                 <Image source={{uri: section.uri}} style={{height: 180, width: 280}}/>
-                
-                <Button
-                  
-                  buttonStyle={{
-                      backgroundColor: "#000",
-                      width: 100,
-                      height: 40,
-                      borderColor: "transparent",
-                      borderWidth: 0,
-                      borderRadius: 5
-                  }}
-                  icon={{name: 'credit-card', type: 'font-awesome'}}
-                  title='BUY'
-                  onPress = { () => { 
-                    console.log('going to chat');
-                    //subscribe to room key
-                    this.subscribeToRoom(section.key);
-                    } }
 
-                  />
               
 
       </Animatable.View>
     );
   };
 
-  renderContent(section, _, isActive) {
+  renderContent = (section, _, isActive) => {
     return (
       <Animatable.View
         duration={400}
@@ -180,6 +175,26 @@ class MarketPlace extends Component {
         <Animatable.Text animation={isActive ? 'bounceLeft' : undefined}>
           ${section.text.price}
         </Animatable.Text>
+
+        <Button
+                  
+                  buttonStyle={{
+                      backgroundColor: "#000",
+                      width: 100,
+                      height: 40,
+                      borderColor: "transparent",
+                      borderWidth: 0,
+                      borderRadius: 5
+                  }}
+                  icon={{name: 'credit-card', type: 'font-awesome'}}
+                  title='BUY'
+                  onPress = { () => { 
+                    console.log('going to chat');
+                    //subscribe to room key
+                    this.subscribeToRoom(section.key);
+                    } }
+
+                  />
 
         
         

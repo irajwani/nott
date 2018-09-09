@@ -18,7 +18,8 @@ class CustomChat extends Component {
 
     const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;
     const {params} = this.props.navigation.state;
-    const key = params ? params.key : null    
+    const key = params ? params.key : null; 
+    const id = params ? params.id : null;
 
     // This will create a `tokenProvider` object. This object will be later used to make a Chatkit Manager instance.
     const tokenProvider = new Chatkit.TokenProvider({
@@ -38,7 +39,7 @@ class CustomChat extends Component {
       this.currentUser = currentUser;
       this.currentUser.subscribeToRoom({
         //roomId: this.currentUser.rooms[0].id,
-        roomId: this.findRoom(key),
+        roomId: id,
         hooks: {
           onNewMessage: this.onReceive.bind(this)
         }
@@ -84,10 +85,10 @@ class CustomChat extends Component {
     }));
   }
 
-  onSend([message], key) {
+  onSend([message], id) {
     this.currentUser.sendMessage({
       text: message.text,
-      roomId: this.findRoom(key),
+      roomId: id,
     });
     
   }
@@ -102,6 +103,8 @@ class CustomChat extends Component {
 
     const {params} = this.props.navigation.state;
     const key = params ? params.key : null    
+    const id = params ? params.id : null    
+
     const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;
     
     console.log(this.state.messages);
@@ -110,7 +113,7 @@ class CustomChat extends Component {
 
       <GiftedChat
         messages={this.state.messages}
-        onSend={messages => this.onSend(messages, key)}
+        onSend={messages => this.onSend(messages, id)}
         user={{
           _id: CHATKIT_USER_NAME
         }}

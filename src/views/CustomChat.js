@@ -18,7 +18,7 @@ class CustomChat extends Component {
 
     const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;
     const {params} = this.props.navigation.state;
-    const key = params ? params.key : null; 
+    
     const id = params ? params.id : null;
 
     // This will create a `tokenProvider` object. This object will be later used to make a Chatkit Manager instance.
@@ -93,16 +93,9 @@ class CustomChat extends Component {
     
   }
 
-  findRoom(key) {
-    for(var room of this.currentUser.rooms ) {
-      if(room.name === key) {return room.id}
-    }
-  }
-
   render() {
 
     const {params} = this.props.navigation.state;
-    const key = params ? params.key : null    
     const id = params ? params.id : null    
 
     const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;

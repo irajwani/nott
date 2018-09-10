@@ -15,7 +15,7 @@ const HomeScreen = TabNavigator(
               Profile: { screen: ProfilePage },
               Market: {screen: MarketPlace},
               Sell: {screen: CreateItem},
-              Conversations: {screen: Chats}
+              Chats: {screen: Chats}
               
             },
             {
@@ -31,8 +31,8 @@ const HomeScreen = TabNavigator(
                       iconName = 'plus-circle';
                     }
 
-                    else if (routeName === 'Sell') {
-                      iconName = 'plus-circle';
+                    else if (routeName === 'Chats') {
+                      iconName = 'comments';
                     }
           
                   // You can return any component that you like here! We usually use an

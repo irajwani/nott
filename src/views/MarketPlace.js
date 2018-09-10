@@ -47,7 +47,7 @@ class MarketPlace extends Component {
     }
   }
 
-  subscribeToRoom(key) {
+  navToChat(key) {
     console.log(key);
     //create separate Chats branch
     const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;
@@ -95,7 +95,7 @@ class MarketPlace extends Component {
             })
             setTimeout(() => {
               this.props.navigation.navigate( 'CustomChat', {key: key, id: this.findRoom(rooms, key)} )
-            }, 10000);
+            }, 1000);
             //this.setState({id: this.findRoom(rooms, key) });  
     
           }  )
@@ -116,11 +116,6 @@ class MarketPlace extends Component {
     });
   }
 
-  navToChat() {
-    console.log('pressed')
-    //this.props.navigation.navigate('CustomChat', {key: key})
-    this.props.navigation.navigate('CustomChat')
-  }
 
   //switch between collapsed and expanded states
   toggleExpanded = () => {
@@ -197,7 +192,7 @@ class MarketPlace extends Component {
                   onPress = { () => { 
                     console.log('going to chat');
                     //subscribe to room key
-                    this.subscribeToRoom(section.key);
+                    this.navToChat(section.key);
                     } }
 
                   />
@@ -236,8 +231,7 @@ class MarketPlace extends Component {
 
   render() {
 
-    const {navigate} = this.props.navigation
-    console.log(navigate);
+    
     if(this.state.isGetting) {
       return ( 
         <View>

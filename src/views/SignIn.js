@@ -91,16 +91,27 @@ class SignIn extends Component {
         const { email, pass } = this.state;
         firebase.auth().createUserWithEmailAndPassword(email, pass)
                     .then(() => { this.setState({ error: '', loading: false });
-                                  this.authChangeListener();  }
+                                  firebase.auth().onAuthStateChanged( (user) => {
+                                    if (user) {
+                                        //give the user a new branch on the firebase realtime DB
+                                        var updates = {};
+                                        var postData = {products: '', profile: ''}
+                                        updates['/Users/' + user.uid + '/'] = postData;
+                                        firebase.database().ref().update(updates);
+                        
+                                        this.setState({uid: user.uid, loggedIn: true, isGetting: false});
+                                    
+                                        
+                                    } else {
+                                    alert('no user found');
+                                    }
+                        
+                        
+                                } )
+                                    }
                                       )
                     .catch(() => {
-                      // console.log( 'registration error', error )
-                      // if (error.code === 'auth/email-already-in-use') {
-                      //       var credential = firebase.auth.EmailAuthProvider.credential(email, password);
-                      //
-                      //
-                      // }
-
+                      
                       this.setState({ error: 'Authentication failed, booo hooo.', loading: false });
                     });
     }
@@ -171,7 +182,7 @@ class SignIn extends Component {
             }
 
             for(const uid of uids) {
-
+                //function assumes each uid has a userId with pusher chat kit
                 var CHATKIT_USER_NAME = uid;
                 const tokenProvider = new Chatkit.TokenProvider({
                 url: CHATKIT_TOKEN_PROVIDER_ENDPOINT
@@ -190,9 +201,30 @@ class SignIn extends Component {
 
                 this.currentUser = currentUser;
                 for(let i = 0; i < this.currentUser.rooms.length; i++) {
+                    console.log(  )
+
+                    
                     var {createdByUserId, name, id} = this.currentUser.rooms[i]
-                    chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {createdByUserId: createdByUserId, name: name, id: id}
-                    firebase.database().ref().update(chatUpdates);
+                    var users = this.currentUser.rooms[i].users
+
+                    //split into cases based on if whether anyone has started conversation with buyer
+                    
+
+                    if(users.length == 2) {
+                        var buyer = users[0,0].name
+                        var seller = users[0,1].name;
+                        
+                        chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {createdByUserId: createdByUserId, name: name, id: id, seller: seller, buyer: buyer}
+                        firebase.database().ref().update(chatUpdates);
+                    } else {
+                        var seller = users[0,0].name;
+                        
+                        chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {createdByUserId: createdByUserId, name: name, id: id, seller: seller}
+                        firebase.database().ref().update(chatUpdates);
+                    }
+
+
+
                 }
                 })
                 
@@ -232,20 +264,8 @@ class SignIn extends Component {
 
         firebase.auth().onAuthStateChanged( (user) => {
             if (user) {
-                // var name = 'nothing here';
-                // firebase.database().ref('Users/').once('value', this.getDB.bind(this), function (errorObject) {
-                //     console.log("The read failed: " + errorObject.code);
-                //   });
 
-                // firebase.database().ref('Users/' + user.uid + '/').once('value', this.getData.bind(this), function (errorObject) {
-                //     console.log("The read failed: " + errorObject.code);
-                //   });
-                //this.updateProducts();
                 this.setState({uid: user.uid, loggedIn: true, isGetting: false});
-                //console.log(this.state.name);
-                //alert(this.state.uid);
-                //return this.props.navigation.navigate('ga', {userid: this.state.uid});
-                //if (this.state.isGetting == false) {return this.props.navigation.navigate('ga', {data: this.state.data, attended: this.state.details.attended, name: this.state.details.name, userid: this.state.uid}); //abandon forced navigation. conditional render
             
                 
             } else {
@@ -259,9 +279,6 @@ class SignIn extends Component {
                   }
 
 
-      
-
-
 
     renderButtonOrLoading() {
         if (this.state.loading) {
@@ -271,7 +288,7 @@ class SignIn extends Component {
         }
         return (
             <View>
-        <Button
+                <Button
                     title='Sign In' 
                     titleStyle={{ fontWeight: "700" }}
                     buttonStyle={{
@@ -284,17 +301,17 @@ class SignIn extends Component {
                     }}
                     containerStyle={{ marginTop: 20, marginBottom: 20 }} onPress={this.onSignInPress.bind(this)} />;
                 <Button
-                title='Sign Up' 
-                titleStyle={{ fontWeight: "700" }}
-                buttonStyle={{
-                backgroundColor: "#2ac40f",
-                width: 300,
-                height: 45,
-                borderColor: "transparent",
-                borderWidth: 0,
-                borderRadius: 5
-                }}
-                containerStyle={{ marginTop: 20, marginBottom: 20 }} onPress={this.onSignUpPress.bind(this)} />;
+                    title='Sign Up' 
+                    titleStyle={{ fontWeight: "700" }}
+                    buttonStyle={{
+                    backgroundColor: "#2ac40f",
+                    width: 300,
+                    height: 45,
+                    borderColor: "transparent",
+                    borderWidth: 0,
+                    borderRadius: 5
+                    }}
+                    containerStyle={{ marginTop: 20, marginBottom: 20 }} onPress={this.onSignUpPress.bind(this)} />;
         </View> )
     }
 

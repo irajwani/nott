@@ -51,7 +51,7 @@ const RootStack = createStackNavigator({
   navigationOptions: {
     title: 'NottMyStyle',
     headerStyle: {
-      backgroundColor: '#121fb5',
+      backgroundColor: '#37a1e8',
     },
     headerTintColor: '#fff',
     headerTitleStyle: {

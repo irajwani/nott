@@ -48,7 +48,8 @@ class MarketPlace extends Component {
   }
 
   subscribeToRoom(key) {
-    console.log(key)
+    console.log(key);
+    //create separate Chats branch
     const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;
     const tokenProvider = new Chatkit.TokenProvider({
       url: CHATKIT_TOKEN_PROVIDER_ENDPOINT
@@ -65,11 +66,7 @@ class MarketPlace extends Component {
     chatManager.connect().then(currentUser => {
       
       this.currentUser = currentUser;
-      this.currentUser.getJoinableRooms().then( (rooms) => {  
-        console.log(rooms);
-        //this.setState({id: this.findRoom(rooms, key) });  
-
-      }  )
+      
       
       setTimeout(() => {
 
@@ -80,8 +77,8 @@ class MarketPlace extends Component {
            console.log(name);
            if(name === key) { 
               console.log('navigating to room')
-              console.log(this.state.id)
-              this.props.navigation.navigate( 'CustomChat', {key: key, id: this.state.id} )
+              
+              this.props.navigation.navigate( 'CustomChat', {key: key, id: this.findRoom(this.currentUser.rooms, key)} )
                             }
     
           }
@@ -91,10 +88,19 @@ class MarketPlace extends Component {
         } else {
           //subscribe to at least the room for this product
           console.log('subscribe to your very first product chat room')
-          this.currentUser.joinRoom( {
-            roomId: this.state.id
-          })
-          .then( (room) => console.log('access various info about room') )
+          this.currentUser.getJoinableRooms().then( (rooms) => {  
+            
+            this.currentUser.joinRoom( {
+              roomId: this.findRoom(rooms, key)
+            })
+            setTimeout(() => {
+              this.props.navigation.navigate( 'CustomChat', {key: key, id: this.findRoom(rooms, key)} )
+            }, 10000);
+            //this.setState({id: this.findRoom(rooms, key) });  
+    
+          }  )
+          
+          
           
     
         }

@@ -27,7 +27,8 @@ class MarketPlace extends Component {
       this.state = {
         refreshing: false,
         isGetting: true,
-        activeSection: false,
+        activeSectionL: false,
+        activeSectionR: false,
         collapsed: true,
       };
       //this.navToChat = this.navToChat.bind(this);
@@ -121,8 +122,12 @@ class MarketPlace extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   };
 
-  setSection = section => {
-    this.setState({ activeSection: section });
+  setSectionL = section => {
+    this.setState({ activeSectionL: section });
+  };
+
+  setSectionR = section => {
+    this.setState({ activeSectionR: section });
   };
 
   renderHeader = (section, _, isActive) => {
@@ -213,7 +218,7 @@ class MarketPlace extends Component {
       var productsl = a.slice(0, (a.length % 2 == 0) ? a.length/2  : Math.floor(a.length/2) + 1 )
       var productsr = a.slice( Math.round(a.length/2) , a.length + 1);
       console.log(a, productsl, productsr);
-      this.setState({ p: a });
+      this.setState({ productsl, productsr });
       
       
 
@@ -249,23 +254,23 @@ class MarketPlace extends Component {
       >
         
         <Accordion
-          activeSection={this.state.activeSection}
-          sections={this.state.p}
+          activeSection={this.state.activeSectionL}
+          sections={this.state.productsl}
           touchableComponent={TouchableOpacity}
           renderHeader={this.renderHeader}
           renderContent={this.renderContent}
           duration={400}
-          onChange={this.setSection}
+          onChange={this.setSectionL}
         />
 
         <Accordion
-          activeSection={this.state.activeSection}
-          sections={this.state.p}
+          activeSection={this.state.activeSectionR}
+          sections={this.state.productsr}
           touchableComponent={TouchableOpacity}
           renderHeader={this.renderHeader}
           renderContent={this.renderContent}
           duration={400}
-          onChange={this.setSection}
+          onChange={this.setSectionR}
         />
 
       </ScrollView> 

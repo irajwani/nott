@@ -24,6 +24,7 @@ class Chats extends Component {
   }
 
   getChats() {
+    //get chats for particular user
     var your_uid = firebase.auth().currentUser.uid;
     const keys = [];
     database.then( (d) => {

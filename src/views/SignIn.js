@@ -99,11 +99,12 @@ class SignIn extends Component {
                                         updates['/Users/' + user.uid + '/'] = postData;
                                         firebase.database().ref().update(updates);
                         
-                                        this.setState({uid: user.uid, loggedIn: true, isGetting: false});
+                                        this.props.navigation.navigate('EditProfile')
+                                        //this.setState({uid: user.uid, loggedIn: true, isGetting: false});
                                     
                                         
                                     } else {
-                                    alert('no user found');
+                                        alert('no user found');
                                     }
                         
                         
@@ -182,51 +183,55 @@ class SignIn extends Component {
             }
 
             for(const uid of uids) {
+
+                if(Object.keys(d.Users[uid]).includes('chats') ) {
                 //function assumes each uid has a userId with pusher chat kit
-                var CHATKIT_USER_NAME = uid;
-                const tokenProvider = new Chatkit.TokenProvider({
-                url: CHATKIT_TOKEN_PROVIDER_ENDPOINT
-                });
-            
-                // This will instantiate a `chatManager` object. This object can be used to subscribe to any number of rooms and users and corresponding messages.
-                // For the purpose of this example we will use single room-user pair.
-                const chatManager = new Chatkit.ChatManager({
-                instanceLocator: CHATKIT_INSTANCE_LOCATOR,
-                userId: CHATKIT_USER_NAME,
-                tokenProvider: tokenProvider
-                });
+                    var CHATKIT_USER_NAME = uid;
+                    const tokenProvider = new Chatkit.TokenProvider({
+                    url: CHATKIT_TOKEN_PROVIDER_ENDPOINT
+                    });
+                
+                    // This will instantiate a `chatManager` object. This object can be used to subscribe to any number of rooms and users and corresponding messages.
+                    // For the purpose of this example we will use single room-user pair.
+                    const chatManager = new Chatkit.ChatManager({
+                    instanceLocator: CHATKIT_INSTANCE_LOCATOR,
+                    userId: CHATKIT_USER_NAME,
+                    tokenProvider: tokenProvider
+                    });
 
-                chatManager.connect()
-                .then( (currentUser) => {
+                    chatManager.connect()
+                    .then( (currentUser) => {
 
-                this.currentUser = currentUser;
-                for(let i = 0; i < this.currentUser.rooms.length; i++) {
-                    console.log(  )
+                    this.currentUser = currentUser;
+                    for(let i = 0; i < this.currentUser.rooms.length; i++) {
+                        console.log(  )
+
+                        
+                        var {createdByUserId, name, id} = this.currentUser.rooms[i]
+                        var users = this.currentUser.rooms[i].users
+
+                        //split into cases based on if whether anyone has started conversation with buyer
+                        
+
+                        if(users.length == 2) {
+                            var buyer = users[0,0].name
+                            var seller = users[0,1].name;
+                            
+                            chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {createdByUserId: createdByUserId, name: name, id: id, seller: seller, buyer: buyer}
+                            firebase.database().ref().update(chatUpdates);
+                        } else {
+                            var seller = users[0,0].name;
+                            
+                            chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {createdByUserId: createdByUserId, name: name, id: id, seller: seller}
+                            firebase.database().ref().update(chatUpdates);
+                        }
 
                     
-                    var {createdByUserId, name, id} = this.currentUser.rooms[i]
-                    var users = this.currentUser.rooms[i].users
 
-                    //split into cases based on if whether anyone has started conversation with buyer
-                    
-
-                    if(users.length == 2) {
-                        var buyer = users[0,0].name
-                        var seller = users[0,1].name;
-                        
-                        chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {createdByUserId: createdByUserId, name: name, id: id, seller: seller, buyer: buyer}
-                        firebase.database().ref().update(chatUpdates);
-                    } else {
-                        var seller = users[0,0].name;
-                        
-                        chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {createdByUserId: createdByUserId, name: name, id: id, seller: seller}
-                        firebase.database().ref().update(chatUpdates);
                     }
+                    })
 
-
-
-                }
-                })
+                } else { console.log('user doesnt have a pusher chatkit account yet') }
                 
             }
             

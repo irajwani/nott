@@ -7,6 +7,7 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import { Sae, Fumi } from 'react-native-textinput-effects';
 import firebase from '../cloud/firebase.js';
 import AddButton from '../components/AddButton.js';
+//import Chatkit from "@pusher/chatkit-server";
 
 const Blob = RNFetchBlob.polyfill.Blob;
 const fs = RNFetchBlob.fs;
@@ -23,6 +24,35 @@ class EditProfile extends Component {
           uri: undefined,
           insta: ''
       }
+  }
+
+  createUser(id, name, url) {
+
+    const CHATKIT_SECRET_KEY = "9b627f79-3aba-48df-af55-838bbb72222d:Pk9vcGeN/h9UQNGVEv609zhjyiPKtmnd0hlBW2T4Hfw="
+    const CHATKIT_TOKEN_PROVIDER_ENDPOINT = "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/7a5d48bb-1cda-4129-88fc-a7339330f5eb/token";
+    const CHATKIT_INSTANCE_LOCATOR = "v1:us1:7a5d48bb-1cda-4129-88fc-a7339330f5eb";
+
+    const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;
+    console.log('here')
+    
+    // const chatkit = new Chatkit.default({
+    //     instanceLocator: CHATKIT_INSTANCE_LOCATOR,
+    //     key: CHATKIT_SECRET_KEY
+    //   });
+    // console.log(chatkit)  
+
+    // chatkit.createUser({
+    //     id: id,
+    //     name: name,
+    //     avatarURL: url
+    //   })
+    //   .then(() => {
+    //     console.log('User created successfully');
+    //   }).catch((err) => {
+    //     console.log(err);
+    //   });
+
+    
   }
 
   updateFirebase(data, uri, mime = 'image/jpg', uid) {
@@ -80,7 +110,8 @@ class EditProfile extends Component {
                 return imageRef.getDownloadURL()
                 })
                 .then((url) => {
-                    console.log(url);
+                    //create a new user and add him to Users room
+                    this.createUser(uid, data.name, url);
                     var profileupdates = {};
                     profileupdates['/Users/' + uid + '/profile/' + 'uri/'] = url ;
                     firebase.database().ref().update(profileupdates);
@@ -93,15 +124,13 @@ class EditProfile extends Component {
 }
   }
 
-  createUser(uid, data) {
-    console.log(uid);
-  }
 
   render() {
     const uid = firebase.auth().currentUser.uid;
     const {params} = this.props.navigation.state
     const pictureuri = params ? params.uri : 'nothing here'
     const picturebase64 = params ? params.base64 : 'nothing here'
+    var conditionMet = (this.state.name) && (this.state.email) && (pictureuri !== 'nothing here')
 
     return (
       <View style={styles.container}>
@@ -153,6 +182,7 @@ class EditProfile extends Component {
         />
 
         <Button
+            disabled = { conditionMet ? false : true}
             large
             buttonStyle={{
                 backgroundColor: "#5bea94",
@@ -164,7 +194,10 @@ class EditProfile extends Component {
             }}
             icon={{name: 'save', type: 'font-awesome'}}
             title='SAVE'
-            onPress={() => {this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid ); this.createUser(uid, this.state); } } 
+            onPress={() => {
+                            this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid );
+                            this.props.navigation.navigate('HomeScreen'); 
+                            } } 
         />
         <Divider style={{  backgroundColor: '#fff', height: 8 }} />
       </View>

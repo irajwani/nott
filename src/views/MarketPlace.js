@@ -11,7 +11,6 @@ import * as Animatable from 'react-native-animatable';
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
 
-
 import Chatkit from "@pusher/chatkit";
 
 const CHATKIT_SECRET_KEY = "9b627f79-3aba-48df-af55-838bbb72222d:Pk9vcGeN/h9UQNGVEv609zhjyiPKtmnd0hlBW2T4Hfw="
@@ -19,8 +18,8 @@ const CHATKIT_TOKEN_PROVIDER_ENDPOINT = "https://us1.pusherplatform.io/services/
 const CHATKIT_INSTANCE_LOCATOR = "v1:us1:7a5d48bb-1cda-4129-88fc-a7339330f5eb";
 
 
+var {height, width} = Dimensions.get('window');
 
-//const width = Dimensions.get('Window').width;
 
 class MarketPlace extends Component {
   constructor(props) {
@@ -130,11 +129,11 @@ class MarketPlace extends Component {
     return (
       <Animatable.View
         duration={400}
-        style={[styles.header, isActive ? styles.active : styles.inactive]}
+        style={[styles.card, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
       >
         
-                <Image source={{uri: section.uri}} style={{height: 180, width: 280}}/>
+                <Image source={{uri: section.uri}} style={{height: 180, width: 80}}/>
 
               
 
@@ -146,7 +145,7 @@ class MarketPlace extends Component {
     return (
       <Animatable.View
         duration={400}
-        style={[styles.content, isActive ? styles.active : styles.inactive]}
+        style={[styles.card, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
       >
           
@@ -181,7 +180,7 @@ class MarketPlace extends Component {
                   
                   buttonStyle={{
                       backgroundColor: "#000",
-                      width: 100,
+                      width: 40,
                       height: 40,
                       borderColor: "transparent",
                       borderWidth: 0,
@@ -244,27 +243,19 @@ class MarketPlace extends Component {
 
       
       <ScrollView
-             contentContainerStyle={{
-                    
-                    
-                    flexGrow: 1,
-                    justifyContent: 'space-between',
-                    
-                }}
-              
+             contentContainerStyle={styles.contentContainerStyle}
       >
         
+        <Accordion
+          activeSection={this.state.activeSection}
+          sections={this.state.p}
+          touchableComponent={TouchableOpacity}
+          renderHeader={this.renderHeader}
+          renderContent={this.renderContent}
+          duration={400}
+          onChange={this.setSection}
+        />
 
-        
-
-        <Collapsible collapsed={this.state.collapsed} align="center">
-          <View style={styles.content}>
-            <Text>
-              Bacon ipsum dolor amet chuck turducken landjaeger tongue spare
-              ribs
-            </Text>
-          </View>
-        </Collapsible>
         <Accordion
           activeSection={this.state.activeSection}
           sections={this.state.p}
@@ -285,6 +276,12 @@ class MarketPlace extends Component {
 export default withNavigation(MarketPlace);
 
 const styles = StyleSheet.create({
+
+  contentContainerStyle: {
+       
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+      },
   
   mainContainer:{
     marginTop:15,
@@ -315,6 +312,13 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
   },
+  card: {
+    backgroundColor: '#fff',
+    width: (width / 2) - 15,
+    height: 200,
+    //marginLeft: 5,
+    //marginTop: 5
+  } ,
   active: {
     backgroundColor: '#8cdbab',
   },

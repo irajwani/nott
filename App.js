@@ -69,6 +69,10 @@ export default class App extends Component<Props> {
   render() {
     console.disableYellowBox = true;
     console.log('Initializing Application')
+    
+    var a = [0,1,2,3,4]
+    console.log(a.slice(3,6))
+    
     return (
       
         <RootStack />

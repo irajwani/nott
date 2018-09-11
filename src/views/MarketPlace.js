@@ -209,9 +209,11 @@ class MarketPlace extends Component {
     const keys = [];
     database.then( (d) => {
       //get list of uids for all users
-      var p = d.Products;
-      console.log(p);
-      this.setState({ p });
+      var a = d.Products;
+      var productsl = a.slice(0, (a.length % 2 == 0) ? a.length/2  : Math.floor(a.length/2) + 1 )
+      var productsr = a.slice( Math.round(a.length/2) , a.length + 1);
+      console.log(a, productsl, productsr);
+      this.setState({ p: a });
       
       
 

@@ -204,10 +204,13 @@ class SignIn extends Component {
 
                     this.currentUser = currentUser;
                     for(let i = 0; i < this.currentUser.rooms.length; i++) {
-                        console.log(  )
-
                         
                         var {createdByUserId, name, id} = this.currentUser.rooms[i]
+                        var product;
+                        d.Products.forEach( (p) => {
+                            if(p.key == name) {  product = p.text }
+                        })
+                        console.log(product);
                         var users = this.currentUser.rooms[i].users
 
                         //split into cases based on if whether anyone has started conversation with buyer
@@ -217,12 +220,12 @@ class SignIn extends Component {
                             var buyer = users[0,0].name
                             var seller = users[0,1].name;
                             
-                            chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {createdByUserId: createdByUserId, name: name, id: id, seller: seller, buyer: buyer}
+                            chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = { product: product, createdByUserId: createdByUserId, name: name, id: id, seller: seller, buyer: buyer}
                             firebase.database().ref().update(chatUpdates);
                         } else {
                             var seller = users[0,0].name;
                             
-                            chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {createdByUserId: createdByUserId, name: name, id: id, seller: seller}
+                            chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {product: product, createdByUserId: createdByUserId, name: name, id: id, seller: seller}
                             firebase.database().ref().update(chatUpdates);
                         }
 

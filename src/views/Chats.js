@@ -79,7 +79,7 @@ class Chats extends Component {
                 <CardItem bordered>
                   <Body>
 
-                    <Text> {chat.seller} </Text>
+                    <Text> {chat.product.name} being sold by {chat.seller} </Text>
                     
                     
 

@@ -67,10 +67,12 @@ class MarketPlace extends Component {
       
       this.currentUser = currentUser;
       
-      
+      var roomExists = this.currentUser.rooms.filter(room => (room.name == key));
+
+      console.log(roomExists.length);
       setTimeout(() => {
 
-        if(this.currentUser.rooms.length > 0) {
+        if(this.currentUser.rooms.length > 0 && roomExists.length > 0 ) {
           //first check if you've already subscribed to this room
           for(var room of this.currentUser.rooms) {
            var {name} = room;
@@ -138,7 +140,7 @@ class MarketPlace extends Component {
         transition="backgroundColor"
       >
         
-                <Image source={{uri: section.uri}} style={{height: 180, width: 80}}/>
+                <Image source={{uri: section.uri}} style={{height: 195, width: (width/2 - 15)}}/>
 
               
 
@@ -177,15 +179,15 @@ class MarketPlace extends Component {
         </Animatable.Text>
         
         
-        <Animatable.Text animation={isActive ? 'bounceLeft' : undefined}>
+        <Animatable.Text style={{fontFamily: 'verdana', fontSize: 9, fontWeight: 'bold', color: 'blue'}} animation={isActive ? 'bounceLeft' : undefined}>
           ${section.text.price}
         </Animatable.Text>
 
         <Button
                   
                   buttonStyle={{
-                      backgroundColor: "#000",
-                      width: 40,
+                      backgroundColor: "#800000",
+                      width: 100,
                       height: 40,
                       borderColor: "transparent",
                       borderWidth: 0,
@@ -285,7 +287,7 @@ export default withNavigation(MarketPlace);
 const styles = StyleSheet.create({
 
   contentContainerStyle: {
-       
+    flexGrow: 4,   
     flexDirection: 'row',
     flexWrap: 'wrap'
       },
@@ -321,10 +323,12 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    width: (width / 2) - 15,
+    width: (width / 2) - 10,
     height: 200,
-    //marginLeft: 5,
-    //marginTop: 5
+    marginLeft: 2,
+    marginRight: 2,
+    marginTop: 2,
+    padding: 5,
   } ,
   active: {
     backgroundColor: '#8cdbab',

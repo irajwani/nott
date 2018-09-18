@@ -151,16 +151,22 @@ class MarketPlace extends Component {
         style={[styles.card, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
       >
-        <View style={ {flexDirection: 'row'} }>
-                <Divider />
-                <Icon name="heart" 
+
+        <View style={{ flex: 1, position: 'relative' }}>
+            <Icon name="heart" 
                        size={15} 
                        color={section.likes ? '#dddddd' : '#800000'}
-                       onPress={() => {this.incrementLikes(section.text.likes, section.uid, section.key)}}/>
-                <Text>{section.text.likes}</Text>
+                       onPress={() => {this.incrementLikes(section.text.likes, section.uid, section.key)}}
+
+            />
+            <Text style={styles.boldText}>{section.text.likes}</Text>
+            <Image 
+            source={{uri: section.uri}}
+            style={{ height: 195, width: (width/2 - 15), zIndex: -1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, resizeMode: 'cover' }} 
+            />
         </View>        
 
-                <Image source={{uri: section.uri}} style={{height: 195, width: (width/2 - 15)}}/>
+                
 
       </Animatable.View>
     );
@@ -263,6 +269,7 @@ class MarketPlace extends Component {
     database.then( (d) => {
       //get list of uids for all users
       var a = d.Products;
+      a = a.sort( (a,b) => { return a.text.likes - b.text.likes } ).reverse();
       var name = d.Users[firebase.auth().currentUser.uid].profile.name;
       var productsl = a.slice(0, (a.length % 2 == 0) ? a.length/2  : Math.floor(a.length/2) + 1 )
       var productsr = a.slice( Math.round(a.length/2) , a.length + 1);
@@ -338,6 +345,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap'
       },
+
+  boldText: {fontFamily: 'verdana', fontSize: 9, fontWeight: 'bold', color: 'blue'},    
   
   mainContainer:{
     marginTop:15,
@@ -371,7 +380,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     width: (width / 2) - 10,
-    height: 230,
+    height: 200,
     marginLeft: 2,
     marginRight: 2,
     marginTop: 2,

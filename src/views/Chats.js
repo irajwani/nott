@@ -31,6 +31,7 @@ class Chats extends Component {
       if(d.Users[your_uid].chats) {
         this.setState({ chats: d.Users[your_uid].chats })
       } else {
+        //user hasn't joined any chat rooms yet
         this.setState( {noChats: true} )
       }
     })
@@ -65,8 +66,8 @@ class Chats extends Component {
     return (
       <ScrollView 
         contentContainerStyle={{
+          flexDirection: 'column',
           flexGrow: 1,
-          justifyContent: 'space-between',
         }}
       >
              

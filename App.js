@@ -17,6 +17,7 @@ import EditProfile from './src/views/EditProfile.js';
 import MarketPlace from './src/views/MarketPlace.js';
 import CustomChat from './src/views/CustomChat.js';
 import PictureCamera from './src/components/PictureCamera.js';
+import Comments from './src/views/Comments.js';
 
 
 type Props = {};
@@ -38,6 +39,8 @@ const RootStack = createStackNavigator({
   CreateItem: CreateItem,
 
   MarketPlace: MarketPlace,
+
+  Comments: Comments,
 
   CustomChat: CustomChat,
 
@@ -69,9 +72,6 @@ export default class App extends Component<Props> {
   render() {
     console.disableYellowBox = true;
     console.log('Initializing Application')
-    
-    var a = [0,1,2,3,4]
-    console.log(a.slice(3,6))
     
     return (
       

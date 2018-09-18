@@ -199,6 +199,10 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
         condition: data.condition,
         months: data.months,
         sold: false,
+        likes: 0,
+        comments: '',
+        time: Date.now(),
+        
       };
   
     var newPostKey = firebase.database().ref().child(`Users/${uid}/products`).push().key;

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Dimensions, View, Image, StyleSheet, ScrollView, RefreshControl, TouchableOpacity, TouchableHighlight } from 'react-native';
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Left, Body } from 'native-base';
-import {Button} from 'react-native-elements'
+import {Button, Divider} from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import firebase from '../cloud/firebase.js';
 import {database, p} from '../cloud/database';
@@ -38,6 +38,18 @@ class MarketPlace extends Component {
     setTimeout(() => {
       this.getProducts();
     }, 4);
+  }
+
+  incrementLikes(likes, uid, key) {
+    var updates = {};
+    likes += 1;
+    var postData = likes;
+    updates['/Users/' + uid + '/products/' + key + '/likes/'] = postData;
+    firebase.database().ref().update(updates);
+  }
+
+  navToComments(uid, productKey, text, name) {
+    this.props.navigation.navigate('Comments', {likes: text.likes, uid: uid, productKey: productKey, text: text, time: text.time, name: name})
   }
 
   findRoom(rooms, key) {
@@ -139,10 +151,16 @@ class MarketPlace extends Component {
         style={[styles.card, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor"
       >
-        
-                <Image source={{uri: section.uri}} style={{height: 195, width: (width/2 - 15)}}/>
+        <View style={ {flexDirection: 'row'} }>
+                <Divider />
+                <Icon name="heart" 
+                       size={15} 
+                       color={section.likes ? '#dddddd' : '#800000'}
+                       onPress={() => {this.incrementLikes(section.text.likes, section.uid, section.key)}}/>
+                <Text>{section.text.likes}</Text>
+        </View>        
 
-              
+                <Image source={{uri: section.uri}} style={{height: 195, width: (width/2 - 15)}}/>
 
       </Animatable.View>
     );
@@ -202,6 +220,34 @@ class MarketPlace extends Component {
                     } }
 
                   />
+        <Animatable.Text 
+          style={{fontFamily: 'verdana', fontSize: 9, fontWeight: 'bold', color: 'blue'}} 
+          animation={isActive ? 'bounceLeft' : undefined}
+          onPress = { () => { 
+                    this.navToComments(section.uid, section.key, section.text, this.state.name);
+                    } }
+        >
+
+          WRITE A REVIEW            
+        </Animatable.Text>
+
+        {/* <Button
+                  
+                  buttonStyle={{
+                      backgroundColor: "#156a87",
+                      width: 100,
+                      height: 40,
+                      borderColor: "transparent",
+                      borderWidth: 0,
+                      borderRadius: 5
+                  }}
+                  icon={{name: 'pencil', type: 'font-awesome'}}
+                  title='WRITE A REVIEW'
+                  onPress = { () => { 
+                    this.navToComments(section.uid, section.key, section.text, this.state.name);
+                    } }
+
+                  />            */}
 
         
         
@@ -217,10 +263,11 @@ class MarketPlace extends Component {
     database.then( (d) => {
       //get list of uids for all users
       var a = d.Products;
+      var name = d.Users[firebase.auth().currentUser.uid].profile.name;
       var productsl = a.slice(0, (a.length % 2 == 0) ? a.length/2  : Math.floor(a.length/2) + 1 )
       var productsr = a.slice( Math.round(a.length/2) , a.length + 1);
       console.log(a, productsl, productsr);
-      this.setState({ productsl, productsr });
+      this.setState({ productsl, productsr, name });
       
       
 
@@ -324,7 +371,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     width: (width / 2) - 10,
-    height: 200,
+    height: 230,
     marginLeft: 2,
     marginRight: 2,
     marginTop: 2,

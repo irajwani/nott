@@ -17,6 +17,7 @@ class PictureCamera extends Component {
         flashMode: false,
         front: false,
         pictureuri: null,
+        pictureuris: null,
         
     }
   }

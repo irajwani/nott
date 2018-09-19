@@ -92,6 +92,11 @@ class ProfilePage extends Component {
           <Icon.Button name="edit" backgroundColor="#3b5998" onPress={() => {this.props.navigation.navigate('EditProfile')}}>
             <Text style={{fontFamily: 'Arial', fontSize: 15}}>Edit Profile</Text>
           </Icon.Button>
+
+          <Icon.Button name="users" backgroundColor="#3b5" onPress={() => {this.props.navigation.navigate('Users')}}>
+            <Text style={{fontFamily: 'Arial', fontSize: 15}}>Users</Text>
+          </Icon.Button>
+
         </View>
       </ImageBackground>
         

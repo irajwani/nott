@@ -18,6 +18,8 @@ import MarketPlace from './src/views/MarketPlace.js';
 import CustomChat from './src/views/CustomChat.js';
 import PictureCamera from './src/components/PictureCamera.js';
 import Comments from './src/views/Comments.js';
+import UserComments from './src/views/UserComments.js';
+import Users from './src/views/Users.js';
 
 
 type Props = {};
@@ -42,9 +44,13 @@ const RootStack = createStackNavigator({
 
   Comments: Comments,
 
+  UserComments: UserComments,
+
   CustomChat: CustomChat,
 
   EditProfile: EditProfile,
+
+  Users: Users,
 
 
 },

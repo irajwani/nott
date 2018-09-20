@@ -158,19 +158,20 @@ class SignIn extends Component {
                 if(Object.keys(d.Users[uid]).includes('products') ) {
 
                     if( Object.keys(d.Users[uid].products).includes(key)  ) {
+                        //get length of folder holding images for this product
+                        
+                        storage.child(`${uid}/${key}`).getDownloadURL()
+                        .then( (uri) => {
+                            //products.push( {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] } )
+                            //products.push( {key: key, uid: uid, uri: uri,} )
+                            //products[i] = {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key]}
+                            postData = {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] };
+                            updates['/Products/' + i + '/'] = postData;
+                            firebase.database().ref().update(updates);
+                            i++;
 
-                    storage.child(`${uid}/${key}`).getDownloadURL()
-                    .then( (uri) => {
-                        //products.push( {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] } )
-                        //products.push( {key: key, uid: uid, uri: uri,} )
-                        //products[i] = {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key]}
-                        postData = {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] };
-                        updates['/Products/' + i + '/'] = postData;
-                        firebase.database().ref().update(updates);
-                        i++;
 
-
-                    } )
+                        } )
 
 
                     }

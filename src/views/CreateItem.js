@@ -145,7 +145,7 @@ showPicker(gender) {
     } 
 }
 
-updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
+updateFirebase = (data, pictureuris, mime = 'image/jpg', uid, imageName) => {
     // : if request.auth != null;
     var gender;
     switch(data.gender) {
@@ -210,35 +210,66 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
     var updates = {};
     updates['/Users/' + uid + '/products/' + newPostKey + '/'] = postData;
     this.createRoom(newPostKey);
+    
 
-    return {database: firebase.database().ref().update(updates), 
-            storage: new Promise((resolve, reject) => {
-                const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-                let uploadBlob = null
-                const imageRef = firebase.storage().ref().child(`Users/${uid}/${newPostKey}`);
-                fs.readFile(uploadUri, 'base64')
-                .then((data) => {
-                return Blob.build(data, { type: `${mime};BASE64` })
-                })
-                .then((blob) => {
-                console.log('got to blob')
-                uploadBlob = blob
-                return imageRef.put(blob, { contentType: mime })
-                })
-                .then(() => {
-                uploadBlob.close()
-                return imageRef.getDownloadURL()
-                })
-                .then((url) => {
-                resolve(url)
-                })
-                .catch((error) => {
-                reject(error)
-                })
-            })
-  }
+    return {database: firebase.database().ref().update(updates),
+            storage: this.uploadToStore(pictureuris, uid, newPostKey)}
 
 }
+
+  uploadToStore = (pictureuris, uid, newPostKey) => {
+      
+    pictureuris.forEach( (uri, index) => {
+        console.log(index);
+        const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+        let uploadBlob = null
+        const imageRef = firebase.storage().ref().child(`Users/${uid}/${newPostKey}/${index}`);
+        fs.readFile(uploadUri, 'base64')
+        .then((data) => {
+        return Blob.build(data, { type: `${mime};BASE64` })
+        })
+        .then((blob) => {
+        console.log('got to blob')
+        uploadBlob = blob
+        return imageRef.put(blob, { contentType: mime })
+        })
+        .then(() => {
+        uploadBlob.close()
+        return imageRef.getDownloadURL()
+        })
+        .then((url) => {
+            console.log(url);
+        })
+    } )
+
+    // for(const uri of pictureuris) {
+    //     var i = 0;
+    //     console.log(i);
+        
+    //     const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+    //     let uploadBlob = null
+    //     const imageRef = firebase.storage().ref().child(`Users/${uid}/${newPostKey}/${i}`);
+    //     fs.readFile(uploadUri, 'base64')
+    //     .then((data) => {
+    //     return Blob.build(data, { type: `${mime};BASE64` })
+    //     })
+    //     .then((blob) => {
+    //     console.log('got to blob')
+    //     i++;
+    //     uploadBlob = blob
+    //     return imageRef.put(blob, { contentType: mime })
+    //     })
+    //     .then(() => {
+    //     uploadBlob.close()
+    //     return imageRef.getDownloadURL()
+    //     })
+    //     .then((url) => {
+    //         console.log(url);
+    //     })
+        
+        
+    // }
+  }
 
   createRoom(key) {
     //create a new room with product id, and add buyer as member of room.  

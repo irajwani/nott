@@ -38,7 +38,7 @@ class MultipleAddButton extends Component {
 
   render() {
     
-    console.log(Array.isArray(this.props.pictureuris) && this.props.pictureuris.length == 2);
+    console.log(this.props.pictureuris.length);
     
     return (
       <View style={styles.headerBackground}>

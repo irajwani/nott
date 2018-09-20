@@ -33,7 +33,7 @@ class MultiplePictureCamera extends Component {
         this.state.pictureuris.push( image64.uri );
         this.setState({isLoading: false, confirmDisabled: false});
         if(this.state.pictureuris.length >= 5) {
-          this.confirmSelection.bind(this, navToComponent);
+          this.confirmSelection(navToComponent);
         }
         console.log(this.state.pictureuris);
         // this.setState({

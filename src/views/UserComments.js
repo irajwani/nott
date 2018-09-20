@@ -62,11 +62,13 @@ class UserComments extends Component {
         console.log(uid);
         const keys = [];
         database.then( (d) => {
+          //get name of current user to track who left comments on this persons UserComments component  
+          var insaanKaNaam = d.Users[firebase.auth().currentUser.uid].profile.name;  
+
           //get list of comments for specific product
-          //var comments = d.Users[uid]
-          //var comments = d.Users[uid].products[productKey].comments ? d.Users[uid].products[productKey].comments : {a: {text: 'No Reviews have been left for this product. Be the first to review this good', name: 'NottMyStyle Team', time: Date.now() } };
           var comments = d.Users[uid].comments ? d.Users[uid].comments : {a: {text: 'No Reviews have been left for this seller. Be the first to review this individual', name: 'NottMyStyle Team', time: Date.now() } };
-          this.setState({ comments });
+          
+          this.setState({ comments, name: insaanKaNaam });
           console.log(comments);
     
         })
@@ -150,7 +152,7 @@ class UserComments extends Component {
                 <TouchableHighlight 
                     style={styles.button}
                     underlayColor='green' 
-                    onPress={ () => {this.uploadComment(params.name , this.state.commentString, params.uid);
+                    onPress={ () => {this.uploadComment(this.state.name , this.state.commentString, params.uid);
                                      this.setState({commentString: ''}); 
                                      }} >
                 <Text style={styles.buttonText}>Reply</Text>

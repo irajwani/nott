@@ -20,8 +20,7 @@ class Users extends Component {
 
     getUsers() {
         database.then( (d) => {
-            this.setState( {users: d.Users} )
-            console.log(this.state.users);
+            this.setState( {users: d.Users, } )
         })
         .then( () => { this.setState({isGetting: false})})
         .catch( (err) => console.log(err))
@@ -29,7 +28,7 @@ class Users extends Component {
 
     navToReview(name, uri, users) {
         //var uid = Object.keys(users)[0];
-        var uids = Object.keys(users)
+        //get uid of user whose profile you're visiting by cross-referencing it against his profile pic url
         var uid;
         Object.keys(users).forEach( (user) => {
             if(users[user].profile.uri == uri) {

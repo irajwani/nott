@@ -220,7 +220,9 @@ updateFirebase = (data, pictureuris, mime = 'image/jpg', uid, imageName) => {
   uploadToStore = (pictureuris, uid, newPostKey) => {
       
     pictureuris.forEach( (uri, index) => {
-        console.log(index);
+        
+        var storageUpdates = {};
+
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
         let uploadBlob = null
         const imageRef = firebase.storage().ref().child(`Users/${uid}/${newPostKey}/${index}`);
@@ -239,6 +241,8 @@ updateFirebase = (data, pictureuris, mime = 'image/jpg', uid, imageName) => {
         })
         .then((url) => {
             console.log(url);
+            storageUpdates['/Users/' + uid + '/products/' + newPostKey + '/uris/' + index + '/'] = url;
+            firebase.database().ref().update(storageUpdates);  
         })
     } )
 

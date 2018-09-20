@@ -161,7 +161,7 @@ class MarketPlace extends Component {
             />
             <Text style={styles.boldText}>{section.text.likes}</Text>
             <Image 
-            source={{uri: section.uri}}
+            source={{uri: section.uris[0]}}
             style={{ height: 195, width: (width/2 - 15), zIndex: -1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, resizeMode: 'cover' }} 
             />
         </View>        

@@ -30,13 +30,14 @@ class Users extends Component {
     navToReview(name, uri, users) {
         //var uid = Object.keys(users)[0];
         var uids = Object.keys(users)
-        var uid = Object.keys(users).forEach( (user) => {
+        var uid;
+        Object.keys(users).forEach( (user) => {
             if(users[user].profile.uri == uri) {
                 console.log(user)
-                return user
+                uid = user;
             }
         });
-            
+        console.log(uid);    
         
         this.props.navigation.navigate('UserComments', {name: name, uri: uri, uid: uid});
     }

@@ -20,6 +20,8 @@ import PictureCamera from './src/components/PictureCamera.js';
 import Comments from './src/views/Comments.js';
 import UserComments from './src/views/UserComments.js';
 import Users from './src/views/Users.js';
+import MultipleAddButton from './src/components/MultipleAddButton.js';
+import MultiplePictureCamera from './src/components/MultiplePictureCamera.js';
 
 
 type Props = {};
@@ -37,6 +39,10 @@ const RootStack = createStackNavigator({
   AddButton: AddButton,
 
   PictureCamera: PictureCamera,
+
+  MultipleAddButton: MultipleAddButton,
+
+  MultiplePictureCamera: MultiplePictureCamera,
 
   CreateItem: CreateItem,
 

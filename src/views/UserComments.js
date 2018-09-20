@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Dimensions, Keyboard, Text, TextInput, TouchableHighlight, View, ScrollView, StyleSheet} from 'react-native';
+import {Dimensions, Keyboard, Text, TextInput, TouchableHighlight, Image, View, ScrollView, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {withNavigation} from 'react-navigation';
 import {database} from '../cloud/database';
@@ -116,6 +116,7 @@ class UserComments extends Component {
             <View style={styles.wrapper} >
             <ScrollView contentContainerStyle={styles.wrapper}>
             <View style={styles.rowContainer}>
+               <Image source={ {uri: params.uri }} style={styles.profilepic} />
                <View style={styles.textContainer}>
                  
                  <Text style={styles.title}>
@@ -225,8 +226,18 @@ const styles = StyleSheet.create({
 
     rowContainer: {
         flexDirection: 'row',
-        padding: 10
+        padding: 20
       },
+
+    profilepic: {
+        flex: 1,
+        width: null,
+        height: 100,
+        alignSelf: 'stretch',
+        borderRadius: 65,
+        borderColor: '#fff',
+        
+    },    
     
     time: {
         fontSize: 15,

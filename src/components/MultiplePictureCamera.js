@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { withNavigation } from 'react-navigation';
 
 
-class PictureCamera extends Component {
+class MultiplePictureCamera extends Component {
 
   constructor(props) {
       super(props);
@@ -16,9 +16,9 @@ class PictureCamera extends Component {
         type: RNCamera.Constants.Type.back,
         flashMode: false,
         front: false,
-        pictureuri: null,
-        //pictureuris: [],
-        //confirmDisabled: true,
+        //pictureuri: null,
+        pictureuris: [],
+        confirmDisabled: true,
         
     }
   }
@@ -30,23 +30,25 @@ class PictureCamera extends Component {
     console.log('first')
     const options = { quality: 0.5, base64: true };
     this.camera.takePictureAsync(options).then((image64) => {
-        // this.state.pictureuris.push( image64.uri );
-        // this.setState({isLoading: false,});
-        // if(this.state.pictureuris.length >= 5) {
-        //   this.confirmSelection.bind(this, navToComponent);
-        // }
-        this.setState({
-            isLoading: false, pictureuri: image64.uri, picturebase64: image64.base64, pictureWidth: image64.width, pictureHeight: image64.height
-        });
-        this.props.navigation.navigate( `${navToComponent}`, {uri: this.state.pictureuri, base64: this.state.picturebase64, width: this.state.pictureWidth, height: this.state.pictureHeight})
+        this.state.pictureuris.push( image64.uri );
+        this.setState({isLoading: false, confirmDisabled: false});
+        if(this.state.pictureuris.length >= 5) {
+          this.confirmSelection.bind(this, navToComponent);
+        }
+        console.log(this.state.pictureuris);
+        // this.setState({
+        //     isLoading: false, pictureuri: image64.uri, picturebase64: image64.base64, pictureWidth: image64.width, pictureHeight: image64.height
+        // });
+        // this.props.navigation.navigate( `${navToComponent}`, {uri: this.state.pictureuri, base64: this.state.picturebase64, width: this.state.pictureWidth, height: this.state.pictureHeight})
 
     }).catch(err => console.error(err))
 
   }
 
-  // confirmSelection(navToComponent) {
-  //   this.props.navigation.navigate(`${navToComponent}`, {pictureuris: this.state.pictureuris} )
-  // }
+  confirmSelection(navToComponent) {
+    console.log('prssed')
+    this.props.navigation.navigate(`${navToComponent}`, {pictureuris: this.state.pictureuris} )
+  }
   
   render() {
     const {params} = this.props.navigation.state;
@@ -66,8 +68,15 @@ class PictureCamera extends Component {
             permissionDialogTitle={'Permission to use camera'}
             permissionDialogMessage={'We need your permission to use your camera phone'}
         >
-        <View style = { {flexDirection: 'row'} }>
-        
+        <View style = { {flexDirection: 'row', } }>
+        {/* confirm button */}
+          <View style={styles.button}>
+            <TouchableHighlight disabled={this.state.confirmDisabled} onPress={ () => { this.confirmSelection(navToComponent) }}>
+              {!this.state.confirmDisabled ? <Icon size={48} color='green' type='material-community' name='check-circle' /> 
+                                  : <Icon size={48} color='gray' type='material-community' name='check-circle' />
+               }
+            </TouchableHighlight>  
+          </View>
         {/* camera button */}
           <View style={styles.cambuttons}>
               <TouchableHighlight style={styles.capture} onPress={this.takePicture.bind(this, navToComponent) } >
@@ -82,17 +91,17 @@ class PictureCamera extends Component {
 
           </View>
               {/* toggle flash mode */}
-          <View style={styles.button}>
+          <View style={styles.flashButton}>
             <TouchableHighlight onPress={ () => {this.setState({flashMode: !this.state.flashMode})}}>
-              {this.state.flashMode ? <Icon type='material-community' name='flashlight' /> : <Icon color='white' type='material-community' name='flashlight-off' />
+              {this.state.flashMode ? <Icon size={48} type='material-community' name='flashlight' /> : <Icon size={48} color='white' type='material-community' name='flashlight-off' />
                }
             </TouchableHighlight>  
           </View>
                 {/* toggle front camera */}
-          <View style={styles.button}>
+          <View style={styles.frontButton}>
             <TouchableHighlight onPress={ () => {this.setState({front: !this.state.front})}}>
-              {this.state.front ? <Icon color='white' type='material-community' name='camera-front' /> 
-                                  : <Icon color='black' type='material-community' name='camera-front' />
+              {this.state.front ? <Icon size={40} color='#800000' type='material-community' name='camera-front' /> 
+                                  : <Icon size={40} color='black' type='material-community' name='camera-front' />
                }
             </TouchableHighlight>  
           </View>
@@ -130,14 +139,36 @@ const styles = StyleSheet.create({
         margin: 20
       },
       button: {
-        margin:20,
+        margin:5,
         flex:0,
-        borderRadius:25,
+        borderRadius:20,
         width:50,
         height:50,
         alignItems:'center',
         justifyContent:'center',
-        backgroundColor:'red'
+        backgroundColor:'#fff'
+      },
+
+      flashButton: {
+        margin:5,
+        flex:0,
+        borderRadius:20,
+        width:50,
+        height:50,
+        alignItems:'center',
+        justifyContent:'center',
+        backgroundColor:'#b4ce0e'
+      },
+
+      frontButton: {
+        margin:5,
+        flex:0,
+        borderRadius:20,
+        width:50,
+        height:50,
+        alignItems:'center',
+        justifyContent:'center',
+        backgroundColor:'#fff'
       },
 })
-export default withNavigation(PictureCamera)
+export default withNavigation(MultiplePictureCamera)

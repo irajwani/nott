@@ -6,7 +6,7 @@ import { TextField } from 'react-native-material-textfield';
 import NumericInput from 'react-native-numeric-input'
 import {Button, ButtonGroup, Divider} from 'react-native-elements';
 import RNFetchBlob from 'react-native-fetch-blob';
-import AddButton from '../components/AddButton';
+import MultipleAddButton from '../components/MultipleAddButton';
 import accounting from 'accounting'
 import ProductLabel from '../components/ProductLabel.js';
 import {signInContainer} from '../styles.js';
@@ -281,8 +281,9 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
   render() {
     const uid = firebase.auth().currentUser.uid; 
     const {params} = this.props.navigation.state
-    const pictureuri = params ? params.uri : 'nothing here'
-    const picturebase64 = params ? params.base64 : 'nothing here'
+    const pictureuris = params ? params.pictureuris : 'nothing here'
+    //const picturebase64 = params ? params.base64 : 'nothing here'
+    //Lenient condition, Array.isArray(pictureuris) && pictureuris.length >= 1
     var conditionMet = (this.state.name) && (this.state.months > 0) && (this.state.price > 0)
     console.log(conditionMet);
     //console.log(pictureuri);
@@ -300,9 +301,10 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
 
             <Divider style={{  backgroundColor: '#fff', height: 12 }} />
         {/* 1. Product Pictures */}
-            <Text style={{textAlign: 'center'}}>Picture of Product:</Text>
+            <Text style={{textAlign: 'center'}}>Picture(s) of Product:</Text>
             <Divider style={{  backgroundColor: '#fff', height: 8 }} />
-            <AddButton navToComponent = {'CreateItem'} pictureuri={pictureuri}/>
+
+            <MultipleAddButton navToComponent = {'CreateItem'} pictureuris={pictureuris}/>
 
             <Divider style={{  backgroundColor: '#fff', height: 12 }} />
 
@@ -471,7 +473,7 @@ updateFirebase = (data, uri, mime = 'image/jpg', uid, imageName) => {
             icon={{name: 'cloud-upload', type: 'font-awesome'}}
             title='SUBMIT TO MARKET'
             onPress={() => { 
-                this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid , this.state.name); 
+                this.updateFirebase(this.state, pictureuris, mime = 'image/jpg', uid , this.state.name); 
                               } } 
             />
 

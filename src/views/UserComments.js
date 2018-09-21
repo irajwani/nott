@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import {Dimensions, Keyboard, Text, TextInput, TouchableHighlight, Image, View, ScrollView, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Kohana } from 'react-native-textinput-effects'
 import {withNavigation} from 'react-navigation';
 import {database} from '../cloud/database';
 import firebase from '../cloud/firebase';
+import { material, systemWeights, human, iOSUIKit } from 'react-native-typography'
 //for each comment, use their time of post as the key
 function timeSince(date) {
 
@@ -118,11 +120,15 @@ class UserComments extends Component {
             <View style={styles.wrapper} >
             <ScrollView contentContainerStyle={styles.wrapper}>
             <View style={styles.rowContainer}>
+                {/* row containing profile picture, and user details */}
                <Image source={ {uri: params.uri }} style={styles.profilepic} />
                <View style={styles.textContainer}>
                  
-                 <Text style={styles.title}>
+                 <Text style={styles.name}>
                    {params.name}
+                 </Text>
+                 <Text style={styles.email}>
+                   {params.email}
                  </Text>
                </View>
                
@@ -133,8 +139,8 @@ class UserComments extends Component {
                  (comment) => (
                  <View key={comment} style={styles.rowContainer}>
                     <View style={styles.textContainer}>
-                        <Text style={ styles.name }> {comments[comment].name} </Text>
-                        <Text style={styles.title}> {comments[comment].text}  </Text>
+                        <Text style={ styles.naam }> {comments[comment].name} </Text>
+                        <Text style={styles.comment}> {comments[comment].text}  </Text>
                         <Text style={ styles.commentTime }> {timeSince(comments[comment].time)} ago </Text>
                     </View>
                     <View style={styles.separator}/>
@@ -144,19 +150,26 @@ class UserComments extends Component {
              )}
              </ScrollView>
             <View style={{flexDirection : 'row', bottom : this.height - this.state.visibleHeight}} >
-                <TextInput 
-                value={this.state.commentString}
-                placeholder="Comment"
-                style={styles.searchInput}
-                onChange={this.onCommentTextChanged.bind(this)}/>
-                <TouchableHighlight 
-                    style={styles.button}
-                    underlayColor='green' 
-                    onPress={ () => {this.uploadComment(this.state.name , this.state.commentString, params.uid);
+                <Kohana
+                    style={{ backgroundColor: '#f9f5ed' }}
+                    label={'Comment'}
+                    value={this.state.commentString}
+                    onChange={this.onCommentTextChanged.bind(this)}
+                    iconClass={Icon}
+                    iconName={'comment-multiple'}
+                    iconColor={'#f4d29a'}
+                    labelStyle={{ color: '#91627b' }}
+                    inputStyle={{ color: '#91627b' }}
+                    useNativeDriver
+                />
+                <Icon name="send" 
+                        size={50} 
+                        color={'#37a1e8'}
+                        onPress={ () => {this.uploadComment(this.state.name , this.state.commentString, params.uid);
                                      this.setState({commentString: ''}); 
-                                     }} >
-                <Text style={styles.buttonText}>Reply</Text>
-                </TouchableHighlight>
+                                     }}
+                />
+                
             </View>
            </View>
         )
@@ -212,17 +225,39 @@ const styles = StyleSheet.create({
     },
 
     name: {
-        fontSize: 12,
-        color: '#239ed3',
+        ...material.headline,
+        fontSize: 18,
+        color: '#207011',
+    },
+
+    email: {
+        ...material.caption,
+        fontSize: 18,
+        color: '#0394c0',
+        fontStyle: 'italic'
+      },  
+
+    naam: {
+        ...iOSUIKit.caption2,
+        fontSize: 11,
+        color: '#37a1e8'
+
     },
 
     title: {
+        ...human.headline,
         fontSize: 20,
         color: '#656565'
       },
 
+    comment: {
+        ...iOSUIKit.bodyEmphasized,
+        fontSize: 25,
+        color: 'black',
+    },  
+
     commentTime: {
-        fontSize: 10,
+        fontSize: 12,
         color: '#1f6010'
     },
 
@@ -232,14 +267,17 @@ const styles = StyleSheet.create({
       },
 
     profilepic: {
-        flex: 1,
-        width: null,
-        height: 100,
-        alignSelf: 'stretch',
-        borderRadius: 65,
-        borderColor: '#fff',
-        
-    },    
+        borderWidth:1,
+        borderColor:'#207011',
+        alignItems:'center',
+        justifyContent:'center',
+        width:70,
+        height:70,
+        backgroundColor:'#fff',
+        borderRadius:50,
+        borderWidth: 2
+    
+    },
     
     time: {
         fontSize: 15,
@@ -248,14 +286,15 @@ const styles = StyleSheet.create({
       },
     
     textContainer: {
-        flex: 1
+        flex: 1,
+        flexDirection: 'column',
+        alignContent: 'center',
+        padding: 5,
       },
 
     separator: {
         height: 1,
         backgroundColor: 'black'
       },
-
-    likes: {color: '#32cd32'}, dislikes: {color: '#800000'}  
 
   });

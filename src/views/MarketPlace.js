@@ -4,6 +4,7 @@ import {withNavigation, StackNavigator} from 'react-navigation'; // Version can 
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Left, Body } from 'native-base';
 import {Button, Divider} from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { iOSUIKit } from 'react-native-typography';
 import firebase from '../cloud/firebase.js';
 import {database, p} from '../cloud/database';
 import {storage} from '../cloud/storage';
@@ -40,12 +41,53 @@ class MarketPlace extends Component {
     }, 4);
   }
 
+  getProducts() {
+    
+    const keys = [];
+    database.then( (d) => {
+      //get list of uids for all users
+      var a = d.Products;
+      a = a.sort( (a,b) => { return a.text.likes - b.text.likes } ).reverse();
+      var name = d.Users[firebase.auth().currentUser.uid].profile.name;
+      var productsl = a.slice(0, (a.length % 2 == 0) ? a.length/2  : Math.floor(a.length/2) + 1 )
+      var productsr = a.slice( Math.round(a.length/2) , a.length + 1);
+      console.log(a, productsl, productsr);
+      //get goods already in user's collection
+      var productsInCollection = d.Users[firebase.auth().currentUser.uid].collection ? Object.keys(d.Users[firebase.auth().currentUser.uid].collection) : [];
+
+
+
+      this.setState({ productsl, productsr, name, productsInCollection });
+      
+      
+
+    })
+    .then( () => { this.setState( {isGetting: false} );  } )
+    .catch( (err) => {console.log(err) })
+    
+  }
+
   incrementLikes(likes, uid, key) {
-    var updates = {};
-    likes += 1;
-    var postData = likes;
-    updates['/Users/' + uid + '/products/' + key + '/likes/'] = postData;
-    firebase.database().ref().update(updates);
+    //add like to product, and add this product to user's collection; if already in collection, modal shows user
+    //theyve already liked the product
+    if(this.state.productsInCollection.includes(key)) {
+      console.log("you've already liked this product")
+
+    } 
+    
+    else {
+      var userCollectionUpdates = {};
+      userCollectionUpdates['/Users/' + uid + '/collection/' + key + '/'] = true;
+      firebase.database().ref().update(updates);
+
+      var updates = {};
+      likes += 1;
+      var postData = likes;
+      updates['/Users/' + uid + '/products/' + key + '/likes/'] = postData;
+      firebase.database().ref().update(updates);
+
+    }
+    
   }
 
   navToComments(uid, productKey, text, name) {
@@ -153,13 +195,15 @@ class MarketPlace extends Component {
       >
 
         <View style={{ flex: 1, position: 'relative' }}>
-            <Icon name="heart" 
-                       size={15} 
-                       color={section.likes ? '#dddddd' : '#800000'}
-                       onPress={() => {this.incrementLikes(section.text.likes, section.uid, section.key)}}
+            <View style={styles.likesRow}>
+              <Icon.Button name="heart" 
+                        size={25} 
+                        color={section.text.likes > 0 ? '#800000' : '#dddddd'}
+                        onPress={() => {this.incrementLikes(section.text.likes, section.uid, section.key)}}
 
-            />
-            <Text style={styles.boldText}>{section.text.likes}</Text>
+              />
+              <Text style={styles.likes}>{section.text.likes}</Text>
+            </View>  
             <Image 
             source={{uri: section.uris[0]}}
             style={{ height: 195, width: (width/2 - 15), zIndex: -1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, resizeMode: 'cover' }} 
@@ -261,29 +305,6 @@ class MarketPlace extends Component {
     );
   }
 
-  
-
-  getProducts() {
-    
-    const keys = [];
-    database.then( (d) => {
-      //get list of uids for all users
-      var a = d.Products;
-      a = a.sort( (a,b) => { return a.text.likes - b.text.likes } ).reverse();
-      var name = d.Users[firebase.auth().currentUser.uid].profile.name;
-      var productsl = a.slice(0, (a.length % 2 == 0) ? a.length/2  : Math.floor(a.length/2) + 1 )
-      var productsr = a.slice( Math.round(a.length/2) , a.length + 1);
-      console.log(a, productsl, productsr);
-      this.setState({ productsl, productsr, name });
-      
-      
-
-    })
-    .then( () => { this.setState( {isGetting: false} );  } )
-    .catch( (err) => {console.log(err) })
-    
-  }
-
   // componentWillMount() {
   //   var products = this.getProducts();
   //   return products;
@@ -346,7 +367,20 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap'
       },
 
+  likesRow: {
+    flexDirection: 'row',
+    padding: 5,
+    margin: 5,
+  },    
+
   boldText: {fontFamily: 'verdana', fontSize: 9, fontWeight: 'bold', color: 'blue'},    
+
+  likes: {
+    ...iOSUIKit.largeTitleEmphasized,
+    color: '#c61919',
+    padding: 2,
+    marginLeft: 4,
+  },
   
   mainContainer:{
     marginTop:15,

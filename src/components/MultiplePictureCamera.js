@@ -32,7 +32,7 @@ class MultiplePictureCamera extends Component {
     this.camera.takePictureAsync(options).then((image64) => {
         this.state.pictureuris.push( image64.uri );
         this.setState({isLoading: false, confirmDisabled: false});
-        if(this.state.pictureuris.length >= 5) {
+        if(this.state.pictureuris.length == 4) {
           this.confirmSelection(navToComponent);
         }
         console.log(this.state.pictureuris);
@@ -68,9 +68,9 @@ class MultiplePictureCamera extends Component {
             permissionDialogTitle={'Permission to use camera'}
             permissionDialogMessage={'We need your permission to use your camera phone'}
         >
-        <View style = { {flexDirection: 'row', } }>
+        <View style = { { flexDirection: 'row', justifyContent: 'space-between'} }>
         {/* confirm button */}
-          <View style={styles.button}>
+          <View style={styles.confirmButton}>
             <TouchableHighlight disabled={this.state.confirmDisabled} onPress={ () => { this.confirmSelection(navToComponent) }}>
               {!this.state.confirmDisabled ? <Icon size={48} color='green' type='material-community' name='check-circle' /> 
                                   : <Icon size={48} color='gray' type='material-community' name='check-circle' />
@@ -78,18 +78,16 @@ class MultiplePictureCamera extends Component {
             </TouchableHighlight>  
           </View>
         {/* camera button */}
-          <View style={styles.cambuttons}>
-              <TouchableHighlight style={styles.capture} onPress={this.takePicture.bind(this, navToComponent) } >
-                <Image
-                  style={{width: 20, height: 20, opacity: 0.7}}
-                  source={require('../images/cb.png')}
-                 />
+        
+            {!this.state.isLoading ? <TouchableHighlight onPress={this.takePicture.bind(this, navToComponent) } >
+                
+              <Icon size={58} type='material-community' name='camera' color='#008000' />
 
-              </TouchableHighlight>
-
-          <ActivityIndicator animating={this.state.isLoading} color='#0040ff' size='large'/>
-
-          </View>
+            </TouchableHighlight>  
+            :    
+            <ActivityIndicator animating={this.state.isLoading} color='#0040ff' size='large'/>
+            }   
+          
               {/* toggle flash mode */}
           <View style={styles.flashButton}>
             <TouchableHighlight onPress={ () => {this.setState({flashMode: !this.state.flashMode})}}>
@@ -100,8 +98,8 @@ class MultiplePictureCamera extends Component {
                 {/* toggle front camera */}
           <View style={styles.frontButton}>
             <TouchableHighlight onPress={ () => {this.setState({front: !this.state.front})}}>
-              {this.state.front ? <Icon size={40} color='#800000' type='material-community' name='camera-front' /> 
-                                  : <Icon size={40} color='black' type='material-community' name='camera-front' />
+              {this.state.front ? <Icon size={40} color='#800000' type='material-community' name='camera-switch' /> 
+                                  : <Icon size={40} color='#3db6e2' type='material-community' name='camera-switch' />
                }
             </TouchableHighlight>  
           </View>
@@ -138,6 +136,17 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         margin: 20
       },
+      confirmButton: {
+        margin:5,
+        flex:0,
+        borderRadius:40,
+        width:50,
+        height:50,
+        alignItems:'center',
+        justifyContent:'center',
+        backgroundColor:'#fff'
+      },
+
       button: {
         margin:5,
         flex:0,
@@ -157,7 +166,7 @@ const styles = StyleSheet.create({
         height:50,
         alignItems:'center',
         justifyContent:'center',
-        backgroundColor:'#b4ce0e'
+        backgroundColor:'#ac7339'
       },
 
       frontButton: {

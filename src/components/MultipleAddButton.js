@@ -51,32 +51,28 @@ class MultipleAddButton extends Component {
 
         </TouchableHighlight>
 
-        <ScrollView horizontal={true} contentContainerStyle={ { flexGrow: 1, 
-        backgroundColor: '#fff',
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',}}>
+        <View style={ { 
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              }}
+        >
 
-            {Array.isArray(this.props.pictureuris) && this.props.pictureuris.length == 2  ?
+            {Array.isArray(this.props.pictureuris) && this.props.pictureuris.length >= 2  ?
                 <Image source={{uri: this.props.pictureuris[1]}} style={styles.profilepic} /> :
                 <Image source={require('../images/nothing_here.png')} style={styles.profilepic} />
             }
 
-            {Array.isArray(this.props.pictureuris) && this.props.pictureuris.length == 3 ?
+            {Array.isArray(this.props.pictureuris) && this.props.pictureuris.length >= 3 ?
                 <Image source={{uri: this.props.pictureuris[2]}} style={styles.profilepic} /> :
                 <Image source={require('../images/nothing_here.png')} style={styles.profilepic} />
             }
 
-            {Array.isArray(this.props.pictureuris) && this.props.pictureuris.length == 4 ?
+            {Array.isArray(this.props.pictureuris) && this.props.pictureuris.length >= 4 ?
                 <Image source={{uri: this.props.pictureuris[3]}} style={styles.profilepic} /> :
                 <Image source={require('../images/nothing_here.png')} style={styles.profilepic} />
             }
-
-            {Array.isArray(this.props.pictureuris) && this.props.pictureuris.length == 5 ?
-                <Image source={{uri: this.props.pictureuris[4]}} style={styles.profilepic} /> :
-                <Image source={require('../images/nothing_here.png')} style={styles.profilepic} />
-            }
         
-        </ScrollView>
+        </View>
         
         
         

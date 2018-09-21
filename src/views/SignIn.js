@@ -289,7 +289,7 @@ class SignIn extends Component {
     renderButtonOrLoading() {
         if (this.state.loading) {
             return <View style={{flex: 1}}>
-                        <PacmanIndicator color='#121fb5' />
+                        <PacmanIndicator color='#28a526' />
                    </View>
         }
         return (

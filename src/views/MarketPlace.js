@@ -90,8 +90,9 @@ class MarketPlace extends Component {
     
   }
 
-  navToComments(uid, productKey, text, name) {
-    this.props.navigation.navigate('Comments', {likes: text.likes, uid: uid, productKey: productKey, text: text, time: text.time, name: name})
+  navToComments(uid, productKey, text, name, uri) {
+    console.log('navigating to Comments section')
+    this.props.navigation.navigate('Comments', {likes: text.likes, uid: uid, productKey: productKey, uri: uri, text: text, time: text.time, name: name})
   }
 
   findRoom(rooms, key) {
@@ -196,7 +197,7 @@ class MarketPlace extends Component {
 
         <View style={{ flex: 1, position: 'relative' }}>
             <View style={styles.likesRow}>
-              <Icon.Button name="heart" 
+              <Icon name="heart" 
                         size={25} 
                         color={section.text.likes > 0 ? '#800000' : '#dddddd'}
                         onPress={() => {this.incrementLikes(section.text.likes, section.uid, section.key)}}
@@ -274,7 +275,7 @@ class MarketPlace extends Component {
           style={{fontFamily: 'verdana', fontSize: 9, fontWeight: 'bold', color: 'blue'}} 
           animation={isActive ? 'bounceLeft' : undefined}
           onPress = { () => { 
-                    this.navToComments(section.uid, section.key, section.text, this.state.name);
+                    this.navToComments(section.uid, section.key, section.text, this.state.name, section.uris[0]);
                     } }
         >
 

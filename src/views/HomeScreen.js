@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import { Text, View } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { withNavigation, TabNavigator, TabBarBottom } from 'react-navigation'; // Version can be specified in package.json
 import ProfilePage from './ProfilePage';
 import MarketPlace from './MarketPlace';
 import CreateItem from './CreateItem';
 import Chats from './Chats'
+import Collection from './Collection'
 
 
 
@@ -15,7 +16,8 @@ const HomeScreen = TabNavigator(
               Profile: { screen: ProfilePage },
               Market: {screen: MarketPlace},
               Sell: {screen: CreateItem},
-              Chats: {screen: Chats}
+              Chats: {screen: Chats},
+              Collection: {screen: Collection},
               
             },
             {
@@ -24,15 +26,19 @@ const HomeScreen = TabNavigator(
                   const { routeName } = navigation.state;
                   let iconName;
                   if (routeName === 'Profile') {
-                    iconName = 'user-circle';
+                    iconName = 'account-circle';
                   } else if (routeName === 'Market') {
-                    iconName = 'shopping-bag';
+                    iconName = 'shopping';
                   } else if (routeName === 'Sell') {
-                      iconName = 'plus-circle';
+                      iconName = 'plus-circle-outline';
                     }
 
                     else if (routeName === 'Chats') {
-                      iconName = 'comments';
+                      iconName = 'forum';
+                    }
+
+                    else if (routeName === 'Collection') {
+                      iconName = 'basket';
                     }
           
                   // You can return any component that you like here! We usually use an

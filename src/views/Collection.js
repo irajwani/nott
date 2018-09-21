@@ -22,7 +22,7 @@ const CHATKIT_INSTANCE_LOCATOR = "v1:us1:7a5d48bb-1cda-4129-88fc-a7339330f5eb";
 var {height, width} = Dimensions.get('window');
 
 
-class MarketPlace extends Component {
+class Collection extends Component {
   constructor(props) {
       super(props);
       this.state = {
@@ -45,19 +45,21 @@ class MarketPlace extends Component {
     
     const keys = [];
     database.then( (d) => {
-      //get list of uids for all users
-      var all = d.Products;
-      all = all.sort( (a,b) => { return a.text.likes - b.text.likes } ).reverse();
+      //Only pull the products that are in this user's collection
+      var collectionKeys = Object.keys(d.Users[firebase.auth().currentUser.uid].collection);  
+      var a = d.Products;
+      a = a.filter((product) => collectionKeys.includes(product.key) );
+      a = a.sort( (a,b) => { return a.text.likes - b.text.likes } ).reverse();
       var name = d.Users[firebase.auth().currentUser.uid].profile.name;
-      var productsl = all.slice(0, (all.length % 2 == 0) ? all.length/2  : Math.floor(all.length/2) + 1 )
-      var productsr = all.slice( Math.round(all.length/2) , all.length + 1);
-      console.log(all, productsl, productsr);
+      var productsl = a.slice(0, (a.length % 2 == 0) ? a.length/2  : Math.floor(a.length/2) + 1 )
+      var productsr = a.slice( Math.round(a.length/2) , a.length + 1);
+      console.log(a, productsl, productsr);
       //get goods already in user's collection
       var productsInCollection = d.Users[firebase.auth().currentUser.uid].collection ? Object.keys(d.Users[firebase.auth().currentUser.uid].collection) : [];
 
 
 
-      this.setState({ all, productsl, productsr, name, productsInCollection });
+      this.setState({ productsl, productsr, name, productsInCollection });
       
       
 
@@ -78,15 +80,13 @@ class MarketPlace extends Component {
     else {
       var userCollectionUpdates = {};
       userCollectionUpdates['/Users/' + uid + '/collection/' + key + '/'] = true;
-      firebase.database().ref().update(userCollectionUpdates);
+      firebase.database().ref().update(updates);
 
       var updates = {};
       likes += 1;
       var postData = likes;
       updates['/Users/' + uid + '/products/' + key + '/likes/'] = postData;
       firebase.database().ref().update(updates);
-
-
 
     }
     
@@ -360,7 +360,7 @@ class MarketPlace extends Component {
   }
 }
 
-export default withNavigation(MarketPlace);
+export default withNavigation(Collection);
 
 const styles = StyleSheet.create({
 

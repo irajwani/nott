@@ -155,25 +155,25 @@ class Comments extends Component {
              )}
              </ScrollView>
             <View style={{flexDirection : 'row', bottom : this.height - this.state.visibleHeight}} >
-            <Kohana
-                style={{ backgroundColor: '#f9f5ed' }}
-                label={'Comment'}
-                value={this.state.commentString}
-                onChange={this.onCommentTextChanged.bind(this)}
-                iconClass={Icon}
-                iconName={'comment-multiple'}
-                iconColor={'#f4d29a'}
-                labelStyle={{ color: '#91627b' }}
-                inputStyle={{ color: '#91627b' }}
-                useNativeDriver
-            />
-            <Icon name="send" 
-                    size={50} 
-                    color={'#37a1e8'}
-                    onPress={ () => {this.uploadComment(params.name , this.state.commentString, params.uid, params.productKey);
-                                     this.setState({commentString: ''}); 
-                                    }}
-            />
+                <Kohana
+                    style={{ backgroundColor: '#f9f5ed' }}
+                    label={'Comment'}
+                    value={this.state.commentString}
+                    onChange={this.onCommentTextChanged.bind(this)}
+                    iconClass={Icon}
+                    iconName={'comment-multiple'}
+                    iconColor={'#f4d29a'}
+                    labelStyle={{ color: '#91627b' }}
+                    inputStyle={{ color: '#91627b' }}
+                    useNativeDriver
+                />
+                <Icon name="send" 
+                        size={50} 
+                        color={'#37a1e8'}
+                        onPress={ () => {this.uploadComment(params.name , this.state.commentString, params.uid, params.productKey);
+                                        this.setState({commentString: ''}); 
+                                        }}
+                />
             </View>
            </View>
         )

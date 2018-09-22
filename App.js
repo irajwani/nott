@@ -15,6 +15,7 @@ import AddButton from './src/components/AddButton';
 import CreateItem from './src/views/CreateItem.js'
 import EditProfile from './src/views/EditProfile.js';
 import MarketPlace from './src/views/MarketPlace.js';
+import ProductDetails from './src/views/ProductDetails';
 import CustomChat from './src/views/CustomChat.js';
 import PictureCamera from './src/components/PictureCamera.js';
 import Comments from './src/views/Comments.js';
@@ -47,6 +48,8 @@ const RootStack = createStackNavigator({
   CreateItem: CreateItem,
 
   MarketPlace: MarketPlace,
+
+  ProductDetails: ProductDetails,
 
   Comments: Comments,
 

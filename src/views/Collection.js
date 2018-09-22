@@ -3,8 +3,8 @@ import { Dimensions, View, Image, StyleSheet, ScrollView, RefreshControl, Toucha
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import { Container, Header, Content, Card, CardItem, Thumbnail, Text, Left, Body } from 'native-base';
 import {Button, Divider} from 'react-native-elements'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { iOSUIKit } from 'react-native-typography';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { material, systemWeights, human, iOSUIKit, iOSColors } from 'react-native-typography'
 import firebase from '../cloud/firebase.js';
 import {database, p} from '../cloud/database';
 import {storage} from '../cloud/storage';
@@ -26,6 +26,7 @@ class Collection extends Component {
   constructor(props) {
       super(props);
       this.state = {
+        emptyCollection: false,
         refreshing: false,
         isGetting: true,
         activeSectionL: false,
@@ -41,25 +42,41 @@ class Collection extends Component {
     }, 4);
   }
 
+  componentDidMount() {
+      setTimeout(() => {
+          this.forceUpdate();
+      }, 4000);
+  }
+
   getProducts() {
     
     const keys = [];
     database.then( (d) => {
       //Only pull the products that are in this user's collection
-      var collectionKeys = Object.keys(d.Users[firebase.auth().currentUser.uid].collection);  
-      var a = d.Products;
-      a = a.filter((product) => collectionKeys.includes(product.key) );
-      a = a.sort( (a,b) => { return a.text.likes - b.text.likes } ).reverse();
-      var name = d.Users[firebase.auth().currentUser.uid].profile.name;
-      var productsl = a.slice(0, (a.length % 2 == 0) ? a.length/2  : Math.floor(a.length/2) + 1 )
-      var productsr = a.slice( Math.round(a.length/2) , a.length + 1);
-      console.log(a, productsl, productsr);
-      //get goods already in user's collection
-      var productsInCollection = d.Users[firebase.auth().currentUser.uid].collection ? Object.keys(d.Users[firebase.auth().currentUser.uid].collection) : [];
+      if(d.Users[firebase.auth().currentUser.uid].collection) {  
+
+        var collectionKeys = Object.keys(d.Users[firebase.auth().currentUser.uid].collection);  
+        var a = d.Products;
+        a = a.filter((product) => collectionKeys.includes(product.key) );
+        a = a.sort( (a,b) => { return a.text.likes - b.text.likes } ).reverse();
+        var name = d.Users[firebase.auth().currentUser.uid].profile.name;
+        var productsl = a.slice(0, (a.length % 2 == 0) ? a.length/2  : Math.floor(a.length/2) + 1 )
+        var productsr = a.slice( Math.round(a.length/2) , a.length + 1);
+        console.log(a, productsl, productsr);
+        //get goods already in user's collection
+        var productsInCollection = d.Users[firebase.auth().currentUser.uid].collection ? Object.keys(d.Users[firebase.auth().currentUser.uid].collection) : [];
 
 
 
-      this.setState({ productsl, productsr, name, productsInCollection });
+        this.setState({ productsl, productsr, name, collectionKeys, productsInCollection });
+
+      } 
+      
+      else {
+        
+        this.setState( {emptyCollection: true,} )
+
+      }
       
       
 
@@ -102,6 +119,10 @@ class Collection extends Component {
       
       if(room.name === key) {return room.id}
     }
+  }
+
+  navToProductDetails(details) {
+      this.props.navigation.navigate('ProductDetails', {details: details})
   }
 
   navToChat(key) {
@@ -199,17 +220,24 @@ class Collection extends Component {
 
         <View style={{ flex: 1, position: 'relative' }}>
             <View style={styles.likesRow}>
-              <Icon name="heart" 
+
+              {this.state.collectionKeys.includes(section.key) ? <Icon name="heart" 
                         size={25} 
-                        color={section.text.likes > 0 ? '#800000' : '#dddddd'}
+                        color='#800000'
                         onPress={() => {this.incrementLikes(section.text.likes, section.uid, section.key)}}
 
-              />
+              /> : <Icon name="heart-outline" 
+                        size={25} 
+                        color={iOSColors.white}
+                        onPress={() => {this.incrementLikes(section.text.likes, section.uid, section.key)}}
+
+              />}
+
               <Text style={styles.likes}>{section.text.likes}</Text>
             </View>  
             <Image 
             source={{uri: section.uris[0]}}
-            style={{ height: 195, width: (width/2 - 15), zIndex: -1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, resizeMode: 'cover' }} 
+            style={{ height: 190, width: (width/2 - 18), zIndex: -1, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, resizeMode: 'cover' }} 
             />
         </View>        
 
@@ -227,62 +255,56 @@ class Collection extends Component {
         transition="backgroundColor"
       >
           
-        <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
-          {section.text.name}
-        </Animatable.Text>
-        <Animatable.Text animation={isActive ? 'fadeInDownBig' : undefined}>
+        <View style= { styles.priceMagnifyingGlassRow } >
+            <Animatable.Text style={styles.price} animation={isActive ? 'bounceInRight' : undefined}>
+            ${section.text.price}
+            </Animatable.Text>
+            <Icon name="magnify" 
+                  size={22} 
+                  color='#082b8c'
+                  onPress={ () => { 
+                      console.log('navigating to full details');
+                      this.navToProductDetails(section); 
+                      }}  
+            />
+        </View>
+            
+        
+
+        <Animatable.Text style={styles.brand} animation={isActive ? 'lightSpeedIn' : undefined}>
           {section.text.brand}
         </Animatable.Text>
-        <Animatable.Text animation={isActive ? 'fadeInUpBig' : undefined}>
-          {section.text.description}
-        </Animatable.Text>
-        <Animatable.Text animation={isActive ? 'slideInLeft' : undefined}>
-          {section.text.gender}
-        </Animatable.Text>
-        <Animatable.Text animation={isActive ? 'slideInRight' : undefined}>
-          {section.text.type}
-        </Animatable.Text>
-        <Animatable.Text animation={isActive ? 'bounceIn' : undefined}>
-          {section.text.condition}
-        </Animatable.Text>
-        <Animatable.Text animation={isActive ? 'bounceRight' : undefined}>
+        
+        <Animatable.Text style={styles.size} animation={isActive ? 'slideInLeft' : undefined}>
           {section.text.size}
         </Animatable.Text>
         
-        
-        <Animatable.Text style={{fontFamily: 'verdana', fontSize: 9, fontWeight: 'bold', color: 'blue'}} animation={isActive ? 'bounceLeft' : undefined}>
-          ${section.text.price}
-        </Animatable.Text>
+        <View style={ styles.buyReviewRow }  >
+            <Button
+                    buttonStyle={{
+                        backgroundColor: "#186f87",
+                        width: 80,
+                        height: 40,
+                        
+                    }}
+                    icon={{name: 'credit-card', type: 'font-awesome'}}
+                    title='BUY'
+                    onPress = { () => { 
+                        console.log('going to chat');
+                        //subscribe to room key
+                        this.navToChat(section.key);
+                        } }
 
-        <Button
-                  
-                  buttonStyle={{
-                      backgroundColor: "#800000",
-                      width: 100,
-                      height: 40,
-                      borderColor: "transparent",
-                      borderWidth: 0,
-                      borderRadius: 5
-                  }}
-                  icon={{name: 'credit-card', type: 'font-awesome'}}
-                  title='BUY'
-                  onPress = { () => { 
-                    console.log('going to chat');
-                    //subscribe to room key
-                    this.navToChat(section.key);
-                    } }
-
-                  />
-        <Animatable.Text 
-          style={{fontFamily: 'verdana', fontSize: 9, fontWeight: 'bold', color: 'blue'}} 
-          animation={isActive ? 'bounceLeft' : undefined}
-          onPress = { () => { 
-                    this.navToComments(section.uid, section.key, section.text, this.state.name, section.uris[0]);
-                    } }
-        >
-
-          WRITE A REVIEW            
-        </Animatable.Text>
+                    />
+            <Icon
+                name="lead-pencil" 
+                size={20}  
+                color={'#0e4406'}
+                onPress = { () => { 
+                            this.navToComments(section.uid, section.key, section.text, this.state.name, section.uris[0]);
+                            } }
+            />
+        </View>
 
         {/* <Button
                   
@@ -317,13 +339,22 @@ class Collection extends Component {
 
   render() {
 
-    
-    if(this.state.isGetting) {
+    var {isGetting, emptyCollection} = this.state;
+
+    if(isGetting) {
       return ( 
         <View>
           <Text>Loading...</Text>
         </View>
       )
+    }
+
+    if(emptyCollection) {
+        return (
+            <View>
+                <Text>You haven't liked any items on the marketplace yet.</Text>
+            </View>
+        )
     }
     
     return (
@@ -370,11 +401,19 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap'
       },
 
+  priceMagnifyingGlassRow: {
+    flexDirection: 'row', justifyContent: 'space-between', padding: 10 
+  },    
+
   likesRow: {
     flexDirection: 'row',
-    padding: 5,
-    margin: 5,
-  },    
+    backgroundColor: iOSColors.lightGray2,
+    marginLeft: 95,
+  },
+  
+  buyReviewRow: {
+    flexDirection: 'row', justifyContent: 'space-between', padding: 5, marginRight: 30
+  },
 
   boldText: {fontFamily: 'verdana', fontSize: 9, fontWeight: 'bold', color: 'blue'},    
 
@@ -422,9 +461,15 @@ const styles = StyleSheet.create({
     marginRight: 2,
     marginTop: 2,
     padding: 5,
+    justifyContent: 'space-between'
   } ,
+  //controls the color of the collapsible card when activated
   active: {
-    backgroundColor: '#8cdbab',
+    backgroundColor: '#96764c',
+    //#f4d29a
+    //#b78b3e
+    //#7c5d34
+    //#c99f68
   },
   inactive: {
     backgroundColor: '#fff',
@@ -445,6 +490,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     padding: 10,
+  },
+
+  price: {
+    ...material.display3,
+    fontSize: 35,
+    fontWeight: 'bold',
+    color: 'black'
+  },
+
+  brand: {
+      ...material.display1,
+      fontFamily: 'AmericanTypewriter-Condensed',
+      fontSize: 25,
+      fontStyle: 'normal',
+      color: iOSColors.lightGray
+  },
+
+  size: {
+      ...material.display2,
+      fontStyle: 'normal',
+      fontSize: 20,
+      color: iOSColors.midGray
   },
 });
 

@@ -299,11 +299,12 @@ class SignIn extends Component {
                     titleStyle={{ fontWeight: "700" }}
                     buttonStyle={{
                     backgroundColor: "#121fb5",
-                    width: 300,
+                    //#2ac40f
+                    width: 250,
                     height: 45,
-                    borderColor: "transparent",
-                    borderWidth: 0,
-                    borderRadius: 5
+                    borderColor: "#37a1e8",
+                    borderWidth: 3,
+                    borderRadius: 25
                     }}
                     containerStyle={{ marginTop: 20, marginBottom: 20 }} onPress={this.onSignInPress.bind(this)} />;
                 <Button
@@ -311,11 +312,12 @@ class SignIn extends Component {
                     titleStyle={{ fontWeight: "700" }}
                     buttonStyle={{
                     backgroundColor: "#2ac40f",
-                    width: 300,
+                    //#2ac40f
+                    width: 250,
                     height: 45,
-                    borderColor: "transparent",
-                    borderWidth: 0,
-                    borderRadius: 5
+                    borderColor: "#226b13",
+                    borderWidth: 3,
+                    borderRadius: 25
                     }}
                     containerStyle={{ marginTop: 20, marginBottom: 20 }} onPress={this.onSignUpPress.bind(this)} />;
         </View> )

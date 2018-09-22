@@ -121,8 +121,8 @@ class Collection extends Component {
     }
   }
 
-  navToProductDetails(details) {
-      this.props.navigation.navigate('ProductDetails', {details: details})
+  navToProductDetails(data) {
+      this.props.navigation.navigate('ProductDetails', {data: data})
   }
 
   navToChat(key) {

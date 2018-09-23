@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
-import {ScrollView, View, Text, Image, StyleSheet} from 'react-native';
+import {ScrollView, View, Text, Image, Dimensions, StyleSheet} from 'react-native';
 import { withNavigation } from 'react-navigation';
 import CustomCarousel from '../components/CustomCarousel';
+import CustomComments from '../components/CustomComments';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import styles from '../styles.js'
 import { database } from '../cloud/database';
 import { Divider } from 'react-native-elements';
 
 import { iOSColors, iOSUIKit } from 'react-native-typography';
+import MoreDetailsListItem from '../components/MoreDetailsListItem';
 
+var {height, width} = Dimensions.get('window');
 
 class ProductDetails extends Component {
 
@@ -79,9 +82,20 @@ class ProductDetails extends Component {
 
   render() {
     const { params } = this.props.navigation.state;
-    const { comments } = params;
+    const { data } = params;
+    
     const {profile} = this.state;
-    const text = params.data.text;
+    const text = data.text;
+    const details = {
+      gender: text.gender,
+      size: text.size,
+      type: text.type,
+      condition: text.condition,
+      months: text.months,
+      original_price: text.original_price
+    };
+    const description = text.description;
+    const {comments} = text;
 
     console.log("videos: updating")
 
@@ -152,21 +166,36 @@ class ProductDetails extends Component {
         </View>
         <View style={ {flexDirection: 'row',} }>
             <Text style={styles.numberProducts}>Products on Sale: {this.state.numberProducts} </Text>
-            <Divider style={{  backgroundColor: '#0394c0', width: 3, height: 20 }} />
+            <Divider style={{  backgroundColor: iOSColors.black, width: 3, height: 20 }} />
             <Text style={styles.soldProducts}> Products Sold: {this.state.soldProducts}</Text>
         </View>
-
-        
-        
         <View style={profileRowStyles.separator}/>
 
+        
+        
+        
+
         {/* more details */}
+        
+        { Object.keys(details).map( (key) => (
+          
+            <View style={styles.dalmationContainer}>
+              <View style={ styles.keyContainer }>
+                  <Text style={styles.keyText}>{key === 'original_price' ? 'ORIGINAL PRICE' : key.toUpperCase()}</Text>
+              </View>
+              <View style={ styles.valueContainer }>
+                  <Text style={styles.valueText}>{details[key]}</Text>
+              </View>
+            </View>
+
+        )
+        ) }
 
         {/* buy button */}
 
         {/* comments */}
 
-        {/* <CustomComments comments={comments} /> */}
+        <CustomComments comments={comments} currentUsersName={profile.name}/>
 
       </ScrollView> 
     );
@@ -235,7 +264,45 @@ const styles = StyleSheet.create( {
     fontSize: 16,
     color: 'black',
     fontWeight: 'bold'
-  }
+  },
+
+  dalmationContainer: {
+    flexDirection: 'row',
+    padding: 5,
+    justifyContent: 'space-evenly'
+},
+
+keyContainer: {
+    width: (width/2) - 30,
+    height: 40,
+    padding: 5,
+    justifyContent: 'center',
+    backgroundColor: iOSColors.customGray
+},
+
+valueContainer: {
+    width: (width/2),
+    height: 40,
+    padding: 5,
+    justifyContent: 'center',
+    backgroundColor: iOSColors.black
+},
+
+keyText: {
+    color: iOSColors.black,
+    fontFamily: 'TrebuchetMS-Bold',
+    fontSize: 15,
+    fontWeight: '400'
+
+},
+
+valueText: {
+    color: iOSColors.white,
+    fontFamily: 'Al Nile',
+    fontSize: 18,
+    fontWeight: '300'
+
+},
 
 } )
 
@@ -287,6 +354,7 @@ insta: {
 
 separator: {
   height: 1,
-  backgroundColor: 'black'
+  backgroundColor: 'black',
+  padding: 2,
 },
 } )

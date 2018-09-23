@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import {ScrollView, View, Text, Image, StyleSheet} from 'react-native';
 import { withNavigation } from 'react-navigation';
 import CustomCarousel from '../components/CustomCarousel';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import styles from '../styles.js'
 import { database } from '../cloud/database';
+import { Divider } from 'react-native-elements';
+
+import { iOSColors, iOSUIKit } from 'react-native-typography';
 
 
 class ProductDetails extends Component {
@@ -15,7 +19,8 @@ class ProductDetails extends Component {
       profile: {
         name: '',
         email: '',
-      }
+      },
+      collectionKeys: [3],
     }
   }
 
@@ -30,12 +35,46 @@ class ProductDetails extends Component {
   getProfile(data) {
     database.then( (d) => {
       const profile = d.Users[data.uid].profile;
+      const collectionKeys = Object.keys(d.Users[data.uid].collection);  
 
-      this.setState( {profile} )
+      var soldProducts = 0;
+
+      for(var p of Object.values(d.Users[data.uid].products)) {
+        if(p.sold) {
+          soldProducts++
+        }
+      }
+      
+      var numberProducts = Object.keys(d.Users[data.uid].products).length
+
+      this.setState( {profile, numberProducts, soldProducts, collectionKeys} )
     })
     .then( () => {
       this.setState({isGetting: false})
     })
+  }
+
+  incrementLikes(likes, uid, key) {
+    //add like to product, and add this product to user's collection; if already in collection, modal shows user
+    //theyve already liked the product
+    if(this.state.collectionKeys.includes(key)) {
+      console.log("you've already liked this product")
+
+    } 
+    
+    else {
+      var userCollectionUpdates = {};
+      userCollectionUpdates['/Users/' + uid + '/collection/' + key + '/'] = true;
+      firebase.database().ref().update(updates);
+
+      var updates = {};
+      likes += 1;
+      var postData = likes;
+      updates['/Users/' + uid + '/products/' + key + '/likes/'] = postData;
+      firebase.database().ref().update(updates);
+
+    }
+    
   }
 
   render() {
@@ -64,7 +103,32 @@ class ProductDetails extends Component {
 
         {/* product details */}
         <Text style={styles.brandText}> {text.brand.toUpperCase()} </Text>
-        <Text style={styles.nameText}> {text.name.toUpperCase() } </Text>
+
+        <View style={styles.nameAndLikeRow} >
+          <Text style={styles.nameText}> {text.name.toUpperCase() } </Text>
+          <View style={styles.likesRow}>
+
+              {this.state.collectionKeys.includes(params.data.key) ? 
+                  <Icon name="heart" 
+                        size={35} 
+                        color='#800000'
+                        onPress={() => { alert("you've already liked this product"); }}
+
+              /> : <Icon name="heart-outline" 
+                        size={35} 
+                        color={iOSColors.white}
+                        onPress={() => {this.incrementLikes(params.data.text.likes, params.data.uid, params.data.key)}}
+
+              />}
+
+              <Text style={styles.likes}>{params.data.text.likes}</Text>
+            </View> 
+        </View>
+        
+        <Text style={styles.priceText}> ${text.price} </Text>
+
+
+
         {/* row showing user details */}
         <View style={profileRowStyles.separator}/>
         <View style={profileRowStyles.rowContainer}>
@@ -76,11 +140,23 @@ class ProductDetails extends Component {
               {profile.name}
             </Text>
             <Text style={profileRowStyles.email}>
-              {params.email}
+              {profile.email}
             </Text>
+            <Text style={profileRowStyles.insta}>
+              @{profile.insta}
+            </Text>
+            
           </View>
           
+          
         </View>
+        <View style={ {flexDirection: 'row',} }>
+            <Text style={styles.numberProducts}>Products on Sale: {this.state.numberProducts} </Text>
+            <Divider style={{  backgroundColor: '#0394c0', width: 3, height: 20 }} />
+            <Text style={styles.soldProducts}> Products Sold: {this.state.soldProducts}</Text>
+        </View>
+
+        
         
         <View style={profileRowStyles.separator}/>
 
@@ -105,28 +181,69 @@ const styles = StyleSheet.create( {
     backgroundColor: '#fff',
     flexDirection: 'column',
     justifyContent: 'space-evenly',
-    padding: 5,
+    padding: 10,
     marginTop: 5,
     marginBottom: 5
   },
 
   brandText: {
     fontFamily: 'Courier-Bold',
-    fontSize: 30,
+    fontSize: 35,
     fontWeight: '400'
+  },
+
+  priceText: {
+    fontFamily: 'Avenir',
+    fontSize: 28,
+    fontWeight: '400',
+    padding: 5,
+    color: '#91627b'
+    
+  },
+
+  nameAndLikeRow: {
+    flexDirection: 'row'
   },
 
   nameText: {
     fontStyle: 'normal',
     fontWeight: 'normal',
     fontSize: 20,
+    padding: 10,
   },
+
+  likesRow: {
+    flexDirection: 'row',
+    backgroundColor: iOSColors.white,
+    marginLeft: 130,
+  },
+
+  likes: {
+    ...iOSUIKit.largeTitleEmphasized,
+    fontSize: 20,
+    color: '#c61919',
+    padding: 2,
+    marginLeft: 4,
+  },
+
+  numberProducts: {
+    fontSize: 16,
+    color: 'black',
+    fontWeight: 'bold'
+  },
+  soldProducts: {
+    fontSize: 16,
+    color: 'black',
+    fontWeight: 'bold'
+  }
+
 } )
 
 const profileRowStyles = StyleSheet.create( {
   rowContainer: {
     flexDirection: 'row',
-    padding: 20
+    padding: 20,
+    justifyContent: 'center'
   },
 
 
@@ -159,6 +276,13 @@ email: {
     fontSize: 18,
     color: '#0394c0',
     fontStyle: 'italic'
+  },
+  
+insta: {
+    fontSize: 16,
+    color: '#13a34c',
+    fontWeight: '600',
+    fontStyle: 'normal'
   },  
 
 separator: {

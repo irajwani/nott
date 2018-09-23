@@ -1,6 +1,10 @@
 import {StyleSheet} from 'react-native'
+import { material, iOSColors, human } from 'react-native-typography';
+
 
 const styles = StyleSheet.create({
+
+  //SIGN IN PAGE
     signInContainer: {
       flex: 1,
       marginTop: 5,
@@ -35,10 +39,8 @@ const styles = StyleSheet.create({
          borderColor: 'gray',
          borderWidth: 1,
   },
-    labelStyle: {
   
-    }
-      ,
+  
      containerStyle: {
          height: 45,
          flexDirection: 'column',
@@ -90,7 +92,15 @@ const styles = StyleSheet.create({
     image: {
       width: 100,
       height: 100
-    }
+    },
+
+
+    
+
+
+
+
+
   });
   
   export default styles

@@ -1,119 +1,168 @@
 import React, { Component } from 'react';
-
-import styled from "styled-components/native"; // 3.1.6
-import Carousel from 'react-native-snap-carousel'; // 3.6.0
+import {ScrollView, View, Text, Image, StyleSheet} from 'react-native';
 import { withNavigation } from 'react-navigation';
+import CustomCarousel from '../components/CustomCarousel';
+// import styles from '../styles.js'
+import { database } from '../cloud/database';
+
 
 class ProductDetails extends Component {
 
   constructor(props){
-    super();
+    super(props);
     this.state = {
-      errors: []
+      isGetting: true,
+      profile: {
+        name: '',
+        email: '',
+      }
     }
-    this.props = props;
-    this._carousel = {};
-    this.init();
   }
 
-  init(){
-    this.state = {
-      videos: [
-        {
-          id: "WpIAc9by5iU",
-          thumbnail: "https://img.youtube.com/vi/D9ioyEvdggk/hqdefault.jpg",
-          title: "Led Zeppelin - Stairway To Heaven"
-        }, {
-          id: "sNPnbI1arSE",
-          thumbnail: "https://img.youtube.com/vi/sNPnbI1arSE/hqdefault.jpg",
-          title: "Eminem - My Name Is"
-        }, {
-          id: "VOgFZfRVaww",
-          thumbnail: "https://img.youtube.com/vi/VOgFZfRVaww/hqdefault.jpg",
-          title: ""
-        }
-      ]
-    };
+  componentWillMount() {
+    const {params} = this.props.navigation.state;
 
-    console.log("ThumbnailCarousel Props: ", this.props)
+    setTimeout(() => {
+      this.getProfile(params.data);
+    }, 4);
   }
 
-  handleSnapToItem(index){
-    console.log("snapped to ", index)
+  getProfile(data) {
+    database.then( (d) => {
+      const profile = d.Users[data.uid].profile;
+
+      this.setState( {profile} )
+    })
+    .then( () => {
+      this.setState({isGetting: false})
+    })
   }
 
-  _renderItem = ( {item, index} ) => {
-    console.log("rendering,", index, item)
-    return (
-        <ThumbnailBackgroundView>
-          <CurrentVideoTO
-             onPress={ () => { 
-                console.log("clicked to index", index)
-                this._carousel.snapToItem(index);
-              }}
-          >
-            <CurrentVideoImage source={{ uri: item }} />
-          </CurrentVideoTO>
-            {/*<NextVideoImage source={{ uri: this.state.currentVideo.nextVideoId }}/>*/}
-            
-        </ThumbnailBackgroundView>
-    );
-  }
-
-  getImagesForCarousel(data) {
-    return data.uris;
-
-  }
-
-  render = () => {
+  render() {
     const { params } = this.props.navigation.state;
-    var pictureData = this.getImagesForCarousel( params.data );
+    const { comments } = params;
+    const {profile} = this.state;
+    const text = params.data.text;
 
     console.log("videos: updating")
 
+    if (this.state.isGetting) {
+      return (
+        <View>
+          <Text> Loading... </Text>
+        </View>
+      )
+    }
+
     return (
-      <CarouselBackgroundView>
-        <Carousel
-          ref={ (c) => { this._carousel = c; } }
-          data={pictureData}
-          renderItem={this._renderItem.bind(this)}
-          onSnapToItem={this.handleSnapToItem.bind(this)}
-          sliderWidth={360}
-          itemWidth={256}
-          layout={'default'}
-          firstItem={0}
-        />
-      </CarouselBackgroundView>
+
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+
+        {/* image carousel */}
+
+        <CustomCarousel data={params.data.uris} />
+
+        {/* product details */}
+        <Text style={styles.brandText}> {text.brand.toUpperCase()} </Text>
+        <Text style={styles.nameText}> {text.name.toUpperCase() } </Text>
+        {/* row showing user details */}
+        <View style={profileRowStyles.separator}/>
+        <View style={profileRowStyles.rowContainer}>
+          {/* row containing profile picture, and user details */}
+          <Image source={ {uri: profile.uri }} style={profileRowStyles.profilepic} />
+          <View style={profileRowStyles.textContainer}>
+            
+            <Text style={profileRowStyles.name}>
+              {profile.name}
+            </Text>
+            <Text style={profileRowStyles.email}>
+              {params.email}
+            </Text>
+          </View>
+          
+        </View>
+        
+        <View style={profileRowStyles.separator}/>
+
+        {/* more details */}
+
+        {/* buy button */}
+
+        {/* comments */}
+
+        {/* <CustomComments comments={comments} /> */}
+
+      </ScrollView> 
     );
   }
 }
 
 export default withNavigation(ProductDetails);
 
+const styles = StyleSheet.create( {
+  contentContainer: {
+    flexGrow: 1, 
+    backgroundColor: '#fff',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    padding: 5,
+    marginTop: 5,
+    marginBottom: 5
+  },
 
-const VideoTitleText = styled.Text`
-  color: white;
-  top: 28;
-  justify-content: center;
-`
-const CurrentVideoImage = styled.Image`
-  top: 25;
-  box-shadow: 5px 10px;
-  width: 256;
-  height: 144;
-  border-radius: 10;
-`;
+  brandText: {
+    fontFamily: 'Courier-Bold',
+    fontSize: 30,
+    fontWeight: '400'
+  },
 
-const ThumbnailBackgroundView = styled.View`
-  justify-content: center;
-  align-items: center;
-  width: 256; 
-`;
+  nameText: {
+    fontStyle: 'normal',
+    fontWeight: 'normal',
+    fontSize: 20,
+  },
+} )
 
-const CurrentVideoTO = styled.TouchableOpacity`
-`
-const CarouselBackgroundView = styled.View`
-  background-color: black;
-  height: 200;
-  width: 100%;
-`
+const profileRowStyles = StyleSheet.create( {
+  rowContainer: {
+    flexDirection: 'row',
+    padding: 20
+  },
+
+
+  profilepic: {
+    borderWidth:1,
+    borderColor:'#207011',
+    alignItems:'center',
+    justifyContent:'center',
+    width:70,
+    height:70,
+    backgroundColor:'#fff',
+    borderRadius:50,
+    borderWidth: 2
+
+},
+
+textContainer: {
+  flex: 1,
+  flexDirection: 'column',
+  alignContent: 'center',
+  padding: 5,
+},
+
+name: {
+  fontSize: 18,
+  color: '#207011',
+},
+
+email: {
+    fontSize: 18,
+    color: '#0394c0',
+    fontStyle: 'italic'
+  },  
+
+separator: {
+  height: 1,
+  backgroundColor: 'black'
+},
+} )

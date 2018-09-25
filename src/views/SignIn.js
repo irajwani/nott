@@ -18,6 +18,10 @@ const CHATKIT_SECRET_KEY = "9b627f79-3aba-48df-af55-838bbb72222d:Pk9vcGeN/h9UQNG
 const CHATKIT_TOKEN_PROVIDER_ENDPOINT = "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/7a5d48bb-1cda-4129-88fc-a7339330f5eb/token";
 const CHATKIT_INSTANCE_LOCATOR = "v1:us1:7a5d48bb-1cda-4129-88fc-a7339330f5eb";
 
+//THIS PAGE: 
+//Allows user to sign in or sign up
+//Updates products on firebase db by scouring products from each user's list of products.
+//Updates each user's chats on firebase db by identifying what rooms they are in (which products they currently want to buy or sell) and attaching the relevant information.
 
 
 //var database = firebase.database();
@@ -152,6 +156,7 @@ class SignIn extends Component {
             var chatUpdates = {};
             var postData;
             var i = 0;
+            //go through all products in each user's branch and update the Products section of the database
             for(const uid of uids) {
                 for(const key of keys) {
 
@@ -179,11 +184,11 @@ class SignIn extends Component {
                 
                 }
             }
-
+            //check if people
             for(const uid of uids) {
 
                 if(Object.keys(d.Users[uid]).includes('chats') ) {
-                //function assumes each uid has a userId with pusher chat kit
+                //if a uid has a userId with pusher chat kit account
                     var CHATKIT_USER_NAME = uid;
                     const tokenProvider = new Chatkit.TokenProvider({
                     url: CHATKIT_TOKEN_PROVIDER_ENDPOINT
@@ -235,25 +240,6 @@ class SignIn extends Component {
                 } else { console.log('user doesnt have a pusher chatkit account yet') }
                 
             }
-            
-            
-
-            
-            
-            // var productsObject = {};
-            // console.log(products)
-            // var postData = [
-            //     {id: 3, text: 4}, {id: 4, text: 'sadhd'}
-            // ]
-            // console.log(postData)
-            // var updates = {};
-            // updates['/Products'] = products;
-            // //updates['/Products'] = postData
-            // firebase.database().ref().update(updates);
-            
-            //this.setState( {products} )  
-            
-            
             
         })
         .then( () => {

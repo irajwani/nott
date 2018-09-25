@@ -460,7 +460,7 @@ updateFirebase = (data, pictureuris, mime = 'image/jpg', uid, imageName) => {
                 upDownButtonsBackgroundColor='#E56B70'
                 rightButtonBackgroundColor='#EA3788' 
                 leftButtonBackgroundColor='#E56B70'
-                containerStyle={ {justifyContent: 'space-evenly'} }    
+                containerStyle={ {justifyContent: 'space-evenly', padding: 10,} }    
                 />
              <Text> Months since you bought the product </Text>
             </View>

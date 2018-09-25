@@ -42,11 +42,6 @@ class Collection extends Component {
     }, 4);
   }
 
-  componentDidMount() {
-      setTimeout(() => {
-          this.forceUpdate();
-      }, 4000);
-  }
 
   getProducts() {
     

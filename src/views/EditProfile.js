@@ -26,13 +26,29 @@ class EditProfile extends Component {
       }
   }
 
-  createUser(id, name, url) {
-
+  createUser() {
+    //if user doesnt already have a chatkit account,
+        //create user and add him to the room consisting of all users
+    //else do nothing
     const CHATKIT_SECRET_KEY = "9b627f79-3aba-48df-af55-838bbb72222d:Pk9vcGeN/h9UQNGVEv609zhjyiPKtmnd0hlBW2T4Hfw="
     const CHATKIT_TOKEN_PROVIDER_ENDPOINT = "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/7a5d48bb-1cda-4129-88fc-a7339330f5eb/token";
     const CHATKIT_INSTANCE_LOCATOR = "v1:us1:7a5d48bb-1cda-4129-88fc-a7339330f5eb";
 
     const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;
+
+    const tokenProvider = new Chatkit.TokenProvider({
+        url: CHATKIT_TOKEN_PROVIDER_ENDPOINT
+      });
+  
+    // This will instantiate a `chatManager` object. This object can be used to subscribe to any number of rooms and users and corresponding messages.
+    // For the purpose of this example we will use single room-user pair.
+    const chatManager = new Chatkit.ChatManager({
+    instanceLocator: CHATKIT_INSTANCE_LOCATOR,
+    userId: CHATKIT_USER_NAME,
+    tokenProvider: tokenProvider
+    });
+
+    console.log(chatManager);
     console.log('here')
     
     // const chatkit = new Chatkit.default({
@@ -196,6 +212,7 @@ class EditProfile extends Component {
             title='SAVE'
             onPress={() => {
                             this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid );
+                            this.createUser();
                             this.props.navigation.navigate('HomeScreen'); 
                             } } 
         />

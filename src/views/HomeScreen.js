@@ -17,7 +17,7 @@ const HomeScreen = TabNavigator(
               Market: {screen: MarketPlace},
               Sell: {screen: CreateItem},
               Chats: {screen: Chats},
-              Collection: {screen: Collection},
+              WishList: {screen: Collection},
               
             },
             {
@@ -37,7 +37,7 @@ const HomeScreen = TabNavigator(
                       iconName = 'forum';
                     }
 
-                    else if (routeName === 'Collection') {
+                    else if (routeName === 'WishList') {
                       iconName = 'basket';
                     }
           

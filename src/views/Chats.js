@@ -5,10 +5,14 @@ import {Button} from 'react-native-elements';
 
 import {database} from '../cloud/database'
 import firebase from '../cloud/firebase';
-
 import { withNavigation } from 'react-navigation';
+import Chatkit from '@pusher/chatkit';
 
 const noChatsText = "You have not initiated any chats. You may initiate a conversation with a seller by choosing to 'Buy' a product from the marketplace"
+const CHATKIT_TOKEN_PROVIDER_ENDPOINT = "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/7a5d48bb-1cda-4129-88fc-a7339330f5eb/token";
+const CHATKIT_INSTANCE_LOCATOR = "v1:us1:7a5d48bb-1cda-4129-88fc-a7339330f5eb";
+
+
 
 class Chats extends Component {
 
@@ -25,15 +29,63 @@ class Chats extends Component {
 
   getChats() {
     //get chats for particular user
-    var your_uid = firebase.auth().currentUser.uid;
-    const keys = [];
     database.then( (d) => {
-      if(d.Users[your_uid].chats) {
-        this.setState({ chats: d.Users[your_uid].chats })
-      } else {
-        //user hasn't joined any chat rooms yet
-        this.setState( {noChats: true} )
+      var chats = [];
+      
+      //if a uid has a userId with pusher chat kit account
+      var CHATKIT_USER_NAME = firebase.auth().currentUser.uid;
+      const tokenProvider = new Chatkit.TokenProvider({
+        url: CHATKIT_TOKEN_PROVIDER_ENDPOINT
+      });
+
+      // This will instantiate a `chatManager` object. This object can be used to subscribe to any number of rooms and users and corresponding messages.
+      // For the purpose of this example we will use single room-user pair.
+      const chatManager = new Chatkit.ChatManager({
+        instanceLocator: CHATKIT_INSTANCE_LOCATOR,
+        userId: CHATKIT_USER_NAME,
+        tokenProvider: tokenProvider
+      });
+
+      chatManager.connect()
+      .then( (currentUser) => {
+
+      this.currentUser = currentUser;
+      for(let i = 0; i < this.currentUser.rooms.length; i++) {
+          
+          var {createdByUserId, name, id} = this.currentUser.rooms[i]
+          var product;
+          d.Products.forEach( (prod) => {
+              if(prod.key == name) {  product = prod.text }
+          })
+          console.log(product);
+          var users = this.currentUser.rooms[i].users
+
+          //split into cases based on if whether anyone has started conversation with buyer
+          
+          var obj;
+          if(users.length == 2) {
+              var buyer = users[0,0].name;
+              var seller = users[0,1].name;
+              obj = { product: product, createdByUserId: createdByUserId, name: name, id: id, seller: seller, buyer: buyer};
+              chats.push(obj);
+              chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = obj;
+              firebase.database().ref().update(chatUpdates);
+          } else {
+              var seller = users[0,0].name;
+              obj = {product: product, createdByUserId: createdByUserId, name: name, id: id, seller: seller};
+              chats.push(obj);
+              chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = obj;
+              firebase.database().ref().update(chatUpdates);
+          }
+
+      
+
       }
+      console.log(chats);
+      this.setState({chats});
+      })
+
+
     })
     .then( () => { this.setState( {isGetting: false} );  } )
     .catch( (err) => {console.log(err) })

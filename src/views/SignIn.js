@@ -12,11 +12,8 @@ import HomeScreen from './HomeScreen.js';
 import firebase from '../cloud/firebase.js';
 import {database} from '../cloud/database';
 import {storage} from '../cloud/storage';
-import Chatkit from "@pusher/chatkit";
 
 const CHATKIT_SECRET_KEY = "9b627f79-3aba-48df-af55-838bbb72222d:Pk9vcGeN/h9UQNGVEv609zhjyiPKtmnd0hlBW2T4Hfw="
-const CHATKIT_TOKEN_PROVIDER_ENDPOINT = "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/7a5d48bb-1cda-4129-88fc-a7339330f5eb/token";
-const CHATKIT_INSTANCE_LOCATOR = "v1:us1:7a5d48bb-1cda-4129-88fc-a7339330f5eb";
 
 //THIS PAGE: 
 //Allows user to sign in or sign up
@@ -184,62 +181,8 @@ class SignIn extends Component {
                 
                 }
             }
-            //check if people
-            for(const uid of uids) {
-
-                if(Object.keys(d.Users[uid]).includes('chats') ) {
-                //if a uid has a userId with pusher chat kit account
-                    var CHATKIT_USER_NAME = uid;
-                    const tokenProvider = new Chatkit.TokenProvider({
-                    url: CHATKIT_TOKEN_PROVIDER_ENDPOINT
-                    });
-                
-                    // This will instantiate a `chatManager` object. This object can be used to subscribe to any number of rooms and users and corresponding messages.
-                    // For the purpose of this example we will use single room-user pair.
-                    const chatManager = new Chatkit.ChatManager({
-                    instanceLocator: CHATKIT_INSTANCE_LOCATOR,
-                    userId: CHATKIT_USER_NAME,
-                    tokenProvider: tokenProvider
-                    });
-
-                    chatManager.connect()
-                    .then( (currentUser) => {
-
-                    this.currentUser = currentUser;
-                    for(let i = 0; i < this.currentUser.rooms.length; i++) {
-                        
-                        var {createdByUserId, name, id} = this.currentUser.rooms[i]
-                        var product;
-                        d.Products.forEach( (p) => {
-                            if(p.key == name) {  product = p.text }
-                        })
-                        console.log(product);
-                        var users = this.currentUser.rooms[i].users
-
-                        //split into cases based on if whether anyone has started conversation with buyer
-                        
-
-                        if(users.length == 2) {
-                            var buyer = users[0,0].name
-                            var seller = users[0,1].name;
-                            
-                            chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = { product: product, createdByUserId: createdByUserId, name: name, id: id, seller: seller, buyer: buyer}
-                            firebase.database().ref().update(chatUpdates);
-                        } else {
-                            var seller = users[0,0].name;
-                            
-                            chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = {product: product, createdByUserId: createdByUserId, name: name, id: id, seller: seller}
-                            firebase.database().ref().update(chatUpdates);
-                        }
-
-                    
-
-                    }
-                    })
-
-                } else { console.log('user doesnt have a pusher chatkit account yet') }
-                
-            }
+            
+            
             
         })
         .then( () => {

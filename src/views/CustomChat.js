@@ -68,6 +68,8 @@ class CustomChat extends Component {
   }
 
   onReceive(data) {
+    console.log(data);
+    //...
     const { id, senderId, text, createdAt } = data;
     const incomingMessage = {
       _id: id,

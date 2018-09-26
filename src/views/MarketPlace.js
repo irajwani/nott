@@ -112,6 +112,7 @@ class MarketPlace extends Component {
   }
 
   navToChat(key) {
+    //user wants to buy this product
     console.log(key);
     //create separate Chats branch
     const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;

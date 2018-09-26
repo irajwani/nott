@@ -7,7 +7,7 @@ import RNFetchBlob from 'react-native-fetch-blob';
 import { Sae, Fumi } from 'react-native-textinput-effects';
 import firebase from '../cloud/firebase.js';
 import AddButton from '../components/AddButton.js';
-//import Chatkit from "@pusher/chatkit-server";
+import Chatkit from "@pusher/chatkit";
 
 const Blob = RNFetchBlob.polyfill.Blob;
 const fs = RNFetchBlob.fs;
@@ -26,10 +26,8 @@ class EditProfile extends Component {
       }
   }
 
-  createUser() {
-    //if user doesnt already have a chatkit account,
-        //create user and add him to the room consisting of all users
-    //else do nothing
+  addToUsersRoom() {
+    
     const CHATKIT_SECRET_KEY = "9b627f79-3aba-48df-af55-838bbb72222d:Pk9vcGeN/h9UQNGVEv609zhjyiPKtmnd0hlBW2T4Hfw="
     const CHATKIT_TOKEN_PROVIDER_ENDPOINT = "https://us1.pusherplatform.io/services/chatkit_token_provider/v1/7a5d48bb-1cda-4129-88fc-a7339330f5eb/token";
     const CHATKIT_INSTANCE_LOCATOR = "v1:us1:7a5d48bb-1cda-4129-88fc-a7339330f5eb";
@@ -48,27 +46,20 @@ class EditProfile extends Component {
     tokenProvider: tokenProvider
     });
 
-    console.log(chatManager);
-    console.log('here')
-    
-    // const chatkit = new Chatkit.default({
-    //     instanceLocator: CHATKIT_INSTANCE_LOCATOR,
-    //     key: CHATKIT_SECRET_KEY
-    //   });
-    // console.log(chatkit)  
-
-    // chatkit.createUser({
-    //     id: id,
-    //     name: name,
-    //     avatarURL: url
-    //   })
-    //   .then(() => {
-    //     console.log('User created successfully');
-    //   }).catch((err) => {
-    //     console.log(err);
-    //   });
-
-    
+    chatManager.connect().then(currentUser => {
+        this.currentUser = currentUser;
+        console.log(this.currentUser);
+        var {rooms} = this.currentUser;
+        console.log(rooms); 
+        this.currentUser.joinRoom({
+            roomId: 15868783 //Users
+          })
+            .then(() => {
+              console.log('Added user to room')
+            })
+        }
+    )
+    //otherwise this function does nothing;
   }
 
   updateFirebase(data, uri, mime = 'image/jpg', uid) {
@@ -126,11 +117,14 @@ class EditProfile extends Component {
                 return imageRef.getDownloadURL()
                 })
                 .then((url) => {
-                    //create a new user and add him to Users room
-                    this.createUser(uid, data.name, url);
+                    
+                    //update db with profile picture url
                     var profileupdates = {};
                     profileupdates['/Users/' + uid + '/profile/' + 'uri/'] = url ;
                     firebase.database().ref().update(profileupdates);
+
+                    //create a new user and add him to Users room
+                    this.addToUsersRoom();
                     resolve(url)
                 })
                 .catch((error) => {
@@ -212,7 +206,6 @@ class EditProfile extends Component {
             title='SAVE'
             onPress={() => {
                             this.updateFirebase(this.state, pictureuri, mime = 'image/jpg', uid );
-                            this.createUser();
                             this.props.navigation.navigate('HomeScreen'); 
                             } } 
         />

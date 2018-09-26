@@ -7,13 +7,33 @@ const styles = StyleSheet.create({
   //SIGN IN PAGE
     signInContainer: {
       flex: 1,
-      marginTop: 5,
-      marginBottom: 5,
+      // marginTop: 5,
+      //marginBottom: 5,
       padding: 20,
       flexDirection: 'column',
-      justifyContent: 'space-between',
-      backgroundColor: '#fff',
-    }
+      justifyContent: 'space-evenly',
+      alignContent: 'center',
+      backgroundColor: '#071223',
+      //#fff
+    },
+    companyLogoContainer: {
+      justifyContent: 'center',
+      alignContent: 'center',
+      backgroundColor: 'red'
+    },
+    companyLogo: {
+      resizeMode: 'container',
+      borderWidth:1,
+      borderColor:'#207011',
+      alignItems:'center',
+      justifyContent:'center',
+      width:70,
+      height:70,
+      backgroundColor:'#fff',
+      borderRadius:0,
+      borderWidth: 2
+  
+  }
     ,
     container: {
       alignItems: 'stretch',

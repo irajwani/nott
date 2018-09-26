@@ -290,6 +290,9 @@ class SignIn extends Component {
             
           <KeyboardAvoidingView behavior='padding'
           style={styles.signInContainer}>
+                <View style={styles.companyLogoContainer}>
+                    <Image source={require('../images/blank.jpg')} style={styles.companyLogo}/>
+                </View>
                   
                 <Hoshi
                     label={'Email Address'}

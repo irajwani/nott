@@ -113,6 +113,7 @@ class MarketPlace extends Component {
 
   navToChat(key) {
     //user wants to buy this product
+    
     console.log(key);
     //create separate Chats branch
     const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;
@@ -136,9 +137,9 @@ class MarketPlace extends Component {
 
       console.log(roomExists.length);
       setTimeout(() => {
-
+        //first check if you've already subscribed to this room
         if(this.currentUser.rooms.length > 0 && roomExists.length > 0 ) {
-          //first check if you've already subscribed to this room
+          
           for(var room of this.currentUser.rooms) {
            var {name} = room;
            console.log(name);

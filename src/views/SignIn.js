@@ -23,6 +23,13 @@ const CHATKIT_SECRET_KEY = "9b627f79-3aba-48df-af55-838bbb72222d:Pk9vcGeN/h9UQNG
 
 //var database = firebase.database();
 
+function timeSince(date) {
+
+    var seconds = Math.floor((new Date() - date) / 1000);
+    return Math.floor(seconds/86400);
+    
+}
+
 
 //currently no barrier to logging in and signing up
 class SignIn extends Component {
@@ -161,11 +168,9 @@ class SignIn extends Component {
 
                     if( Object.keys(d.Users[uid].products).includes(key)  ) {
                         
-                        
-                            //products.push( {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key] } )
-                            //products.push( {key: key, uid: uid, uri: uri,} )
-                            //products[i] = {key: key, uid: uid, uri: uri, text: d.Users[uid].products[key]}
-                            postData = {key: key, uid: uid, uris: d.Users[uid].products[key].uris, text: d.Users[uid].products[key] };
+                            var daysElapsed;
+                            daysElapsed = timeSince( d.Users[uid].products[key].time);
+                            postData = {key: key, uid: uid, uris: d.Users[uid].products[key].uris, text: d.Users[uid].products[key], daysElapsed: daysElapsed };
                             updates['/Products/' + i + '/'] = postData;
                             firebase.database().ref().update(updates);
                             i++;

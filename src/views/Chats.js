@@ -71,13 +71,13 @@ class Chats extends Component {
               var seller = users[0,1].name;
               obj = { product: product, createdByUserId: createdByUserId, name: name, id: id, seller: seller, buyer: buyer};
               chats.push(obj);
-              chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = obj;
+              chatUpdates['/Users/' + CHATKIT_USER_NAME + '/chats/' + i + '/'] = obj;
               firebase.database().ref().update(chatUpdates);
           } else {
               var seller = users[0,0].name;
               obj = {product: product, createdByUserId: createdByUserId, name: name, id: id, seller: seller};
               chats.push(obj);
-              chatUpdates['/Users/' + uid + '/chats/' + i + '/'] = obj;
+              chatUpdates['/Users/' + CHATKIT_USER_NAME + '/chats/' + i + '/'] = obj;
               firebase.database().ref().update(chatUpdates);
           }
 

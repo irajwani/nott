@@ -90,6 +90,7 @@ class Collection extends Component {
     } 
     
     else {
+      console.log('first failed')
       var userCollectionUpdates = {};
       userCollectionUpdates['/Users/' + uid + '/collection/' + key + '/'] = true;
       firebase.database().ref().update(updates);

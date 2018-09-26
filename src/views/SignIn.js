@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TouchableHighlight, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
+import { Dimensions, View, Text, Image, TouchableHighlight, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
 import { Hoshi, Jiro } from 'react-native-textinput-effects';
 import {withNavigation, StackNavigator} from 'react-navigation'; // Version can be specified in package.json
 import { PacmanIndicator } from 'react-native-indicators';
@@ -15,6 +15,7 @@ import {storage} from '../cloud/storage';
 
 const CHATKIT_SECRET_KEY = "9b627f79-3aba-48df-af55-838bbb72222d:Pk9vcGeN/h9UQNGVEv609zhjyiPKtmnd0hlBW2T4Hfw="
 
+const {width, height} = Dimensions.get('window');
 //THIS PAGE: 
 //Allows user to sign in or sign up
 //Updates products on firebase db by scouring products from each user's list of products.
@@ -227,33 +228,34 @@ class SignIn extends Component {
                    </View>
         }
         return (
-            <View>
+            <View style={ {padding: 15,} }>
                 <Button
                     title='Sign In' 
                     titleStyle={{ fontWeight: "700" }}
                     buttonStyle={{
-                    backgroundColor: "#121fb5",
+                    backgroundColor: "#45bc53",
                     //#2ac40f
-                    width: 250,
+                    //#45bc53
+                    width: (width)*0.70,
                     height: 45,
                     borderColor: "#37a1e8",
                     borderWidth: 3,
-                    borderRadius: 25
+                    borderRadius: 5
                     }}
-                    containerStyle={{ marginTop: 20, marginBottom: 20 }} onPress={this.onSignInPress.bind(this)} />;
+                    containerStyle={{ marginTop: 5, marginBottom: 5 }} onPress={this.onSignInPress.bind(this)} />;
                 <Button
                     title='Sign Up' 
                     titleStyle={{ fontWeight: "700" }}
                     buttonStyle={{
                     backgroundColor: "#2ac40f",
                     //#2ac40f
-                    width: 250,
+                    width: (width)*0.70,
                     height: 45,
                     borderColor: "#226b13",
                     borderWidth: 3,
-                    borderRadius: 25
+                    borderRadius: 5
                     }}
-                    containerStyle={{ marginTop: 20, marginBottom: 20 }} onPress={this.onSignUpPress.bind(this)} />;
+                    containerStyle={{ marginTop: 5, marginBottom: 5 }} onPress={this.onSignUpPress.bind(this)} />;
         </View> )
     }
 
@@ -290,6 +292,8 @@ class SignIn extends Component {
             
           <KeyboardAvoidingView behavior='padding'
           style={styles.signInContainer}>
+
+            <View style={ { justifyContent: 'space-evenly', flexDirection: 'column', flex: 1.5, paddingRight: 40, paddingLeft: 40, paddingTop: 5}}>
                 <View style={styles.companyLogoContainer}>
                     <Image source={require('../images/blank.jpg')} style={styles.companyLogo}/>
                 </View>
@@ -300,11 +304,11 @@ class SignIn extends Component {
                     onChangeText={email => this.setState({ email })}
                     autoCorrect={false}
                     // this is used as active border color
-                    borderColor={'#800000'}
+                    borderColor={'#071223'}
                     // this is used to set backgroundColor of label mask.
                     // please pass the backgroundColor of your TextInput container.
-                    backgroundColor={'#F9F7F6'}
-                    inputStyle={{ color: '#800000' }}
+                    backgroundColor={'#071223'}
+                    inputStyle={{ color: '#0d7018' }}
                 />
                 <Hoshi
                     label={'Password'}
@@ -313,11 +317,13 @@ class SignIn extends Component {
                     autoCorrect={false}
                     secureTextEntry
                     // this is used as active border color
-                    borderColor={'#000099'}
+                    
                     // this is used to set backgroundColor of label mask.
+                    backgroundColor={'#071223'}
                     // please pass the backgroundColor of your TextInput container.
-                    inputStyle={{ color: '#800000' }}
+                    inputStyle={{ color: '#0d7018' }}
                 />
+            </View>
                   {this.renderButtonOrLoading()}
                   
                 

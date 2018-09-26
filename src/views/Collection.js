@@ -122,6 +122,7 @@ class Collection extends Component {
   }
 
   navToChat(key) {
+    //.......
     console.log(key);
     //create separate Chats branch
     const CHATKIT_USER_NAME = firebase.auth().currentUser.uid;

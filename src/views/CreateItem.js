@@ -209,7 +209,9 @@ updateFirebase = (data, pictureuris, mime = 'image/jpg', uid, imageName) => {
     
     var updates = {};
     updates['/Users/' + uid + '/products/' + newPostKey + '/'] = postData;
-    this.createRoom(newPostKey);
+    
+    //NOOO, for a 2 room exclusive pair, wait for seller to contact buyer through marketplace
+    //this.createRoom(newPostKey);
     
 
     return {database: firebase.database().ref().update(updates),

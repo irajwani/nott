@@ -1,6 +1,7 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Dimensions} from 'react-native'
 import { material, iOSColors, human } from 'react-native-typography';
 
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
 
@@ -11,7 +12,7 @@ const styles = StyleSheet.create({
       //marginBottom: 5,
       padding: 20,
       flexDirection: 'column',
-      justifyContent: 'space-evenly',
+      justifyContent: 'space-between',
       alignContent: 'center',
       backgroundColor: '#071223',
       //#fff
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'red'
     },
     companyLogo: {
-      resizeMode: 'container',
+      //resizeMode: 'container',
       borderWidth:1,
       borderColor:'#207011',
       alignItems:'center',
@@ -31,7 +32,10 @@ const styles = StyleSheet.create({
       height:70,
       backgroundColor:'#fff',
       borderRadius:0,
-      borderWidth: 2
+      borderWidth: 2,
+      marginLeft: (width/2) + 20,
+      paddingLeft: 25,
+      paddingRight: 25
   
   }
     ,

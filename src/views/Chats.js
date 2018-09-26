@@ -50,12 +50,14 @@ class Chats extends Component {
       .then( (currentUser) => {
 
       this.currentUser = currentUser;
-      for(let i = 0; i < this.currentUser.rooms.length; i++) {
+      //perform the following process across all rooms currentUser is a part of except for the common Users Room
+      for(let i = 1; i < this.currentUser.rooms.length; i++) {
           
           var {createdByUserId, name, id} = this.currentUser.rooms[i]
           var product;
           d.Products.forEach( (prod) => {
-              if(prod.key == name) {  product = prod.text }
+              console.log(prod.key, name);
+              if(prod.key == name) { product = prod.text; console.log(product); }
           })
           console.log(product);
           var users = this.currentUser.rooms[i].users
@@ -63,6 +65,7 @@ class Chats extends Component {
           //split into cases based on if whether anyone has started conversation with buyer
           
           var obj;
+          var chatUpdates = {};
           if(users.length == 2) {
               var buyer = users[0,0].name;
               var seller = users[0,1].name;

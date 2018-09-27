@@ -12,6 +12,7 @@ import HomeScreen from './HomeScreen.js';
 import firebase from '../cloud/firebase.js';
 import {database} from '../cloud/database';
 import {storage} from '../cloud/storage';
+import { iOSColors } from 'react-native-typography';
 
 const CHATKIT_SECRET_KEY = "9b627f79-3aba-48df-af55-838bbb72222d:Pk9vcGeN/h9UQNGVEv609zhjyiPKtmnd0hlBW2T4Hfw="
 
@@ -293,13 +294,14 @@ class SignIn extends Component {
           <KeyboardAvoidingView behavior='padding'
           style={styles.signInContainer}>
 
-            <View style={ { justifyContent: 'space-evenly', flexDirection: 'column', flex: 1.5, paddingRight: 40, paddingLeft: 40, paddingTop: 5}}>
+            <View style={ { justifyContent: 'center', flexDirection: 'column', flex: 0.6, paddingRight: 40, paddingLeft: 40, paddingTop: 5}}>
                 <View style={styles.companyLogoContainer}>
                     <Image source={require('../images/blank.jpg')} style={styles.companyLogo}/>
                 </View>
                   
                 <Hoshi
                     label={'Email Address'}
+                    labelStyle={ {color: iOSColors.gray} }
                     value={this.state.email}
                     onChangeText={email => this.setState({ email })}
                     autoCorrect={false}
